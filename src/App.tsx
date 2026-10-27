@@ -1,0 +1,168 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, FileText, Grid3x3, Menu, Moon, Printer, Sparkles, Sun } from 'lucide-react';
+import type { Artwork, PortfolioSlide } from './types';
+import { CORE_PAGE_COUNT, PARTS, SLIDES } from './data/slidesData';
+import { Slide } from './components/Slide';
+import { ChapterDrawer, CitationDrawer, JumpModal, Lightbox, ScaledStage } from './components/Overlays';
+import { PdfHub } from './components/PdfHub';
+import { animateCounter, animateFrameReveal, animateProgress, animateSlideIn } from './utils/animations';
+
+type Mode = 'exhibit' | 'pdf' | 'print';
+
+export default function App() {
+  const [mode, setMode] = useState<Mode>('exhibit');
+  const [index, setIndex] = useState(0);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => (localStorage.getItem('g2-theme') as 'dark' | 'light') || 'dark');
+  const [lightbox, setLightbox] = useState<{ art: Artwork; slide: PortfolioSlide } | null>(null);
+  const [jumpOpen, setJumpOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [citeOpen, setCiteOpen] = useState(false);
+
+  const stageRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const prevIndex = useRef(0);
+
+  const slide = SLIDES[index];
+  const isCore = typeof slide.pageNumber === 'number';
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', theme === 'light');
+    localStorage.setItem('g2-theme', theme);
+  }, [theme]);
+
+  const go = useCallback((i: number) => setIndex(Math.max(0, Math.min(SLIDES.length - 1, i))), []);
+
+  // keyboard navigation
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => {
+      if (mode !== 'exhibit' || lightbox || jumpOpen || drawerOpen) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') go(index + 1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(index - 1);
+      if (e.key === 'Home') go(0);
+      if (e.key === 'End') go(SLIDES.length - 1);
+    };
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [mode, index, lightbox, jumpOpen, drawerOpen, go]);
+
+  // animations on slide change
+  useEffect(() => {
+    if (mode !== 'exhibit') return;
+    animateSlideIn(stageRef.current);
+    animateFrameReveal(stageRef.current);
+    const from = typeof SLIDES[prevIndex.current]?.pageNumber === 'number' ? (SLIDES[prevIndex.current].pageNumber as number) : CORE_PAGE_COUNT;
+    if (isCore) animateCounter(counterRef.current, from, slide.pageNumber as number);
+    animateProgress(progressRef.current, ((index + 1) / SLIDES.length) * 100);
+    prevIndex.current = index;
+  }, [index, mode, isCore, slide.pageNumber]);
+
+  const openArt = useCallback((art: Artwork, s: PortfolioSlide) => setLightbox({ art, slide: s }), []);
+  const modes: { id: Mode; label: string; icon: React.ReactNode }[] = [
+    { id: 'exhibit', label: 'Interactive Exhibition', icon: <Sparkles size={14} /> },
+    { id: 'pdf', label: 'PDF Archive', icon: <FileText size={14} /> },
+    { id: 'print', label: 'Export All Pages', icon: <Printer size={14} /> },
+  ];
+
+  return (
+    <div className="h-full flex flex-col">
+      {/* ---------- Top navigation ---------- */}
+      <nav className="no-print relative z-40 h-14 shrink-0 flex items-center gap-4 px-4 border-b border-line bg-wall/90 backdrop-blur">
+        <button id="chapter-drawer-btn" onClick={() => setDrawerOpen(true)} aria-label="Open chapter drawer" className="p-2 plaque-border hover:bg-gold/10"><Menu size={16} /></button>
+        <div className="leading-none min-w-0">
+          <div className="font-serif text-[19px] font-semibold truncate">A Journey Through Art</div>
+          <div className="font-mono text-[9px] tracking-[0.22em] uppercase text-gold mt-0.5">Group 2 · Digital Exhibition</div>
+        </div>
+        <div className="mx-auto flex plaque-border p-0.5 bg-wall2" role="tablist" aria-label="View mode">
+          {modes.map((m) => (
+            <button
+              key={m.id}
+              id={`mode-${m.id}-btn`}
+              role="tab"
+              aria-selected={mode === m.id}
+              onClick={() => setMode(m.id)}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] transition-colors ${mode === m.id ? 'bg-gold text-[#0d0d0f] font-semibold' : 'text-ink/75 hover:text-gold'}`}
+            >
+              {m.icon}<span className="hidden md:inline">{m.label}</span>
+            </button>
+          ))}
+        </div>
+        <button id="theme-toggle-btn" onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))} className="flex items-center gap-1.5 plaque-border px-3 py-1.5 text-[11px] hover:bg-gold/10" aria-label="Toggle theme">
+          {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          <span className="hidden lg:inline">{theme === 'dark' ? 'Parchment' : 'Gallery Dark'}</span>
+        </button>
+        {mode === 'exhibit' && <div ref={progressRef} className="absolute left-0 bottom-0 h-[2px] bg-gradient-to-r from-gold to-terra" style={{ width: '0%' }} />}
+      </nav>
+
+      {/* ---------- MODE 1: Exhibition ---------- */}
+      {mode === 'exhibit' && (
+        <>
+          <div className="no-print shrink-0 flex items-center gap-3 px-4 h-11 border-b border-line overflow-x-auto no-scrollbar">
+            <div id="slide-badge" className={`shrink-0 font-mono text-[10.5px] tracking-wider px-2.5 py-1 border ${isCore ? 'border-gold/60 text-gold bg-gold/10' : 'border-terra/60 text-terra bg-terra/10'}`}>
+              {isCore ? (
+                <>SLIDE <span ref={counterRef}>{String(slide.pageNumber).padStart(2, '0')}</span> OF {CORE_PAGE_COUNT} <span className="opacity-70">(Excluding References)</span></>
+              ) : (
+                <>BACK MATTER · {slide.pageNumber} <span className="opacity-70">(Excluded from page count)</span></>
+              )}
+            </div>
+            <div className="flex gap-1.5">
+              {PARTS.map((p) => {
+                const first = SLIDES.findIndex((s) => s.partNumber === p.part);
+                const active = slide.partNumber === p.part;
+                return (
+                  <button key={p.part} id={`chapter-pill-${p.part}`} onClick={() => go(first)} className={`shrink-0 text-[11px] px-3 py-1 rounded-full border transition-colors ${active ? 'bg-ink text-wall border-ink' : 'border-line text-ink/70 hover:border-gold hover:text-gold'}`}>
+                    {p.part === 6 ? 'References & Roles' : p.label}
+                  </button>
+                );
+              })}
+            </div>
+            <button id="jump-grid-btn" onClick={() => setJumpOpen(true)} className="ml-auto shrink-0 flex items-center gap-1.5 text-[11px] plaque-border px-3 py-1 hover:bg-gold/10"><Grid3x3 size={13} /> Jump to Slide #</button>
+          </div>
+
+          <main ref={stageRef} className="flex-1 min-h-0 p-4 md:p-6 spotlight" key={index}>
+            <ScaledStage>
+              <Slide slide={slide} onOpenArt={openArt} onNavigate={go} onEnter={() => go(1)} onOpenPdf={() => setMode('pdf')} />
+            </ScaledStage>
+          </main>
+
+          <div className="no-print shrink-0 flex items-center justify-between px-4 h-12 border-t border-line">
+            <button id="prev-slide-btn" onClick={() => go(index - 1)} disabled={index === 0} className="flex items-center gap-1 text-[12px] px-3 py-1.5 plaque-border disabled:opacity-30 hover:bg-gold/10"><ChevronLeft size={15} /> Previous</button>
+            <div className="text-center min-w-0 px-3">
+              <div className="font-serif italic text-[15px] truncate">{slide.title}</div>
+              <div className="font-mono text-[9px] text-muted tracking-wider">← → keys to navigate · click any artwork to inspect</div>
+            </div>
+            <button id="next-slide-btn" onClick={() => go(index + 1)} disabled={index === SLIDES.length - 1} className="flex items-center gap-1 text-[12px] px-3 py-1.5 bg-gold text-[#0d0d0f] font-semibold disabled:opacity-30">Next <ChevronRight size={15} /></button>
+          </div>
+          <CitationDrawer slide={slide} open={citeOpen} onToggle={() => setCiteOpen((o) => !o)} />
+        </>
+      )}
+
+      {/* ---------- MODE 2: PDF Archive ---------- */}
+      {mode === 'pdf' && <div className="flex-1 min-h-0"><PdfHub onGoPrint={() => setMode('print')} /></div>}
+
+      {/* ---------- MODE 3: Print all pages ---------- */}
+      {mode === 'print' && (
+        <div className="flex-1 min-h-0 overflow-auto thin-scroll print-scroll">
+          <div className="no-print sticky top-0 z-30 flex flex-wrap items-center justify-center gap-4 py-3 px-4 bg-wall/90 backdrop-blur border-b border-line">
+            <span className="font-mono text-[10.5px] text-muted">{SLIDES.length} pages · {CORE_PAGE_COUNT} core + 3 back matter · 1122×631 (16:9)</span>
+            <button id="export-print-btn" onClick={() => window.print()} className="flex items-center gap-2 bg-gold text-[#0d0d0f] px-5 py-2 text-[13px] font-semibold hover:brightness-110">
+              <Printer size={15} /> 🖨️ Export All {SLIDES.length} Pages to PDF
+            </button>
+            <span className="font-mono text-[10px] text-muted">Chrome → Save as PDF · Margins: None · ✔ Background graphics</span>
+          </div>
+          <div className="print-canvas flex flex-col items-center gap-8 py-8">
+            {SLIDES.map((s) => (
+              <div key={String(s.pageNumber)} className="print-page shadow-[0_30px_60px_-30px_rgba(0,0,0,0.7)] plaque-border">
+                <Slide slide={s} printMode onNavigate={(i) => { setMode('exhibit'); go(i); }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {lightbox && <Lightbox art={lightbox.art} slide={lightbox.slide} onClose={() => setLightbox(null)} />}
+      {jumpOpen && <JumpModal current={index} onJump={go} onClose={() => setJumpOpen(false)} />}
+      {drawerOpen && <ChapterDrawer current={index} onJump={(i) => { setMode('exhibit'); go(i); }} onClose={() => setDrawerOpen(false)} />}
+    </div>
+  );
+}
