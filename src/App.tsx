@@ -67,13 +67,16 @@ export default function App() {
   return (
     <div className="h-full flex flex-col">
       {/* ---------- Top navigation ---------- */}
-      <nav className="no-print relative z-40 h-14 shrink-0 flex items-center gap-4 px-4 border-b border-line bg-wall/90 backdrop-blur">
-        <button id="chapter-drawer-btn" onClick={() => setDrawerOpen(true)} aria-label="Open chapter drawer" className="p-2 plaque-border hover:bg-gold/10"><Menu size={16} /></button>
-        <div className="leading-none min-w-0">
-          <div className="font-serif text-[19px] font-semibold truncate">A Journey Through Art</div>
-          <div className="font-mono text-[9px] tracking-[0.22em] uppercase text-gold mt-0.5">Group 2 · Digital Exhibition</div>
+      <nav className="no-print relative z-40 h-14 shrink-0 flex items-center justify-between gap-2 sm:gap-4 px-2 sm:px-4 border-b border-line bg-wall/90 backdrop-blur">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <button id="chapter-drawer-btn" onClick={() => setDrawerOpen(true)} aria-label="Open chapter drawer" className="p-1.5 sm:p-2 plaque-border hover:bg-gold/10 shrink-0"><Menu size={16} /></button>
+          <div className="leading-none min-w-0">
+            <div className="font-serif text-[16px] sm:text-[19px] font-semibold truncate max-w-[140px] sm:max-w-[220px] md:max-w-none">A Journey Through Art</div>
+            <div className="font-mono text-[8px] sm:text-[9px] tracking-[0.2em] uppercase text-gold mt-0.5 truncate hidden xs:block">Group 2 · Digital Exhibition</div>
+          </div>
         </div>
-        <div className="mx-auto flex plaque-border p-0.5 bg-wall2" role="tablist" aria-label="View mode">
+
+        <div className="flex plaque-border p-0.5 bg-wall2 shrink-0" role="tablist" aria-label="View mode">
           {modes.map((m) => (
             <button
               key={m.id}
@@ -81,15 +84,16 @@ export default function App() {
               role="tab"
               aria-selected={mode === m.id}
               onClick={() => setMode(m.id)}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] transition-colors ${mode === m.id ? 'bg-gold text-[#0d0d0f] font-semibold' : 'text-ink/75 hover:text-gold'}`}
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-[12px] transition-colors ${mode === m.id ? 'bg-gold text-[#0d0d0f] font-semibold' : 'text-ink/75 hover:text-gold'}`}
             >
               {m.icon}<span className="hidden md:inline">{m.label}</span>
             </button>
           ))}
         </div>
-        <button id="theme-toggle-btn" onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))} className="flex items-center gap-1.5 plaque-border px-3 py-1.5 text-[11px] hover:bg-gold/10" aria-label="Toggle theme">
+
+        <button id="theme-toggle-btn" onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))} className="flex items-center gap-1.5 plaque-border px-2 sm:px-3 py-1.5 text-[11px] hover:bg-gold/10 shrink-0" aria-label="Toggle theme">
           {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-          <span className="hidden lg:inline">{theme === 'dark' ? 'Parchment' : 'Gallery Dark'}</span>
+          <span className="hidden xl:inline">{theme === 'dark' ? 'Parchment' : 'Gallery Dark'}</span>
         </button>
         {mode === 'exhibit' && <div ref={progressRef} className="absolute left-0 bottom-0 h-[2px] bg-gradient-to-r from-gold to-terra" style={{ width: '0%' }} />}
       </nav>
@@ -97,41 +101,47 @@ export default function App() {
       {/* ---------- MODE 1: Exhibition ---------- */}
       {mode === 'exhibit' && (
         <>
-          <div className="no-print shrink-0 flex items-center gap-3 px-4 h-11 border-b border-line overflow-x-auto no-scrollbar">
-            <div id="slide-badge" className={`shrink-0 font-mono text-[10.5px] tracking-wider px-2.5 py-1 border ${isCore ? 'border-gold/60 text-gold bg-gold/10' : 'border-terra/60 text-terra bg-terra/10'}`}>
-              {isCore ? (
-                <>SLIDE <span ref={counterRef}>{String(slide.pageNumber).padStart(2, '0')}</span> OF {CORE_PAGE_COUNT} <span className="opacity-70">(Excluding References)</span></>
-              ) : (
-                <>BACK MATTER · {slide.pageNumber} <span className="opacity-70">(Excluded from page count)</span></>
-              )}
+          <div className="no-print shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 py-1.5 min-h-[44px] border-b border-line bg-wall/60 backdrop-blur">
+            <div className="flex items-center gap-2 overflow-x-auto thin-scroll py-0.5 min-w-0 flex-1">
+              <div id="slide-badge" className={`shrink-0 font-mono text-[10px] sm:text-[10.5px] tracking-wider px-2 py-1 border whitespace-nowrap ${isCore ? 'border-gold/60 text-gold bg-gold/10' : 'border-terra/60 text-terra bg-terra/10'}`}>
+                {isCore ? (
+                  <>SLIDE <span ref={counterRef}>{String(slide.pageNumber).padStart(2, '0')}</span> OF {CORE_PAGE_COUNT} <span className="opacity-70 hidden md:inline">(Excluding References)</span></>
+                ) : (
+                  <>BACK MATTER · {slide.pageNumber} <span className="opacity-70 hidden md:inline">(Excluded)</span></>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                {PARTS.map((p) => {
+                  const first = SLIDES.findIndex((s) => s.partNumber === p.part);
+                  const active = slide.partNumber === p.part;
+                  return (
+                    <button key={p.part} id={`chapter-pill-${p.part}`} onClick={() => go(first)} className={`shrink-0 text-[10.5px] sm:text-[11px] px-2.5 sm:px-3 py-1 rounded-full border whitespace-nowrap transition-colors ${active ? 'bg-ink text-wall border-ink' : 'border-line text-ink/70 hover:border-gold hover:text-gold'}`}>
+                      {p.part === 6 ? 'References & Roles' : p.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex gap-1.5">
-              {PARTS.map((p) => {
-                const first = SLIDES.findIndex((s) => s.partNumber === p.part);
-                const active = slide.partNumber === p.part;
-                return (
-                  <button key={p.part} id={`chapter-pill-${p.part}`} onClick={() => go(first)} className={`shrink-0 text-[11px] px-3 py-1 rounded-full border transition-colors ${active ? 'bg-ink text-wall border-ink' : 'border-line text-ink/70 hover:border-gold hover:text-gold'}`}>
-                    {p.part === 6 ? 'References & Roles' : p.label}
-                  </button>
-                );
-              })}
-            </div>
-            <button id="jump-grid-btn" onClick={() => setJumpOpen(true)} className="ml-auto shrink-0 flex items-center gap-1.5 text-[11px] plaque-border px-3 py-1 hover:bg-gold/10"><Grid3x3 size={13} /> Jump to Slide #</button>
+            <button id="jump-grid-btn" onClick={() => setJumpOpen(true)} className="shrink-0 flex items-center gap-1.5 text-[10.5px] sm:text-[11px] font-mono plaque-border px-2.5 sm:px-3 py-1 bg-wall2/80 hover:bg-gold/10 text-gold whitespace-nowrap transition-colors shadow-sm ml-2">
+              <Grid3x3 size={13} />
+              <span className="hidden sm:inline">Jump to Slide #</span>
+              <span className="sm:hidden">Jump</span>
+            </button>
           </div>
 
-          <main ref={stageRef} className="flex-1 min-h-0 p-4 md:p-6 spotlight" key={index}>
+          <main ref={stageRef} className="flex-1 min-h-0 p-2 sm:p-4 md:p-6 spotlight relative" key={index}>
             <ScaledStage>
               <Slide slide={slide} onOpenArt={openArt} onNavigate={go} onEnter={() => go(1)} onOpenPdf={() => setMode('pdf')} />
             </ScaledStage>
           </main>
 
-          <div className="no-print shrink-0 flex items-center justify-between px-4 h-12 border-t border-line">
-            <button id="prev-slide-btn" onClick={() => go(index - 1)} disabled={index === 0} className="flex items-center gap-1 text-[12px] px-3 py-1.5 plaque-border disabled:opacity-30 hover:bg-gold/10"><ChevronLeft size={15} /> Previous</button>
-            <div className="text-center min-w-0 px-3">
-              <div className="font-serif italic text-[15px] truncate">{slide.title}</div>
-              <div className="font-mono text-[9px] text-muted tracking-wider">← → keys to navigate · click any artwork to inspect</div>
+          <div className="no-print shrink-0 flex items-center justify-between px-3 sm:px-4 h-12 border-t border-line bg-wall/80 backdrop-blur">
+            <button id="prev-slide-btn" onClick={() => go(index - 1)} disabled={index === 0} className="flex items-center gap-1 text-[11px] sm:text-[12px] px-2.5 sm:px-3 py-1.5 plaque-border disabled:opacity-30 hover:bg-gold/10 whitespace-nowrap"><ChevronLeft size={15} /> Prev</button>
+            <div className="text-center min-w-0 px-2 sm:px-3">
+              <div className="font-serif italic text-[13px] sm:text-[15px] truncate max-w-[280px] sm:max-w-md md:max-w-xl">{slide.title}</div>
+              <div className="font-mono text-[8.5px] sm:text-[9px] text-muted tracking-wider hidden sm:block">← → keys to navigate · click any artwork to inspect</div>
             </div>
-            <button id="next-slide-btn" onClick={() => go(index + 1)} disabled={index === SLIDES.length - 1} className="flex items-center gap-1 text-[12px] px-3 py-1.5 bg-gold text-[#0d0d0f] font-semibold disabled:opacity-30">Next <ChevronRight size={15} /></button>
+            <button id="next-slide-btn" onClick={() => go(index + 1)} disabled={index === SLIDES.length - 1} className="flex items-center gap-1 text-[11px] sm:text-[12px] px-2.5 sm:px-3 py-1.5 bg-gold text-[#0d0d0f] font-semibold disabled:opacity-30 whitespace-nowrap">Next <ChevronRight size={15} /></button>
           </div>
           <CitationDrawer slide={slide} open={citeOpen} onToggle={() => setCiteOpen((o) => !o)} />
         </>
