@@ -97,6 +97,7 @@ export function ArtFrame({ art, onOpen, variant = 'gold', showPlaque = true, fit
 
   const fitted = useMemo(() => {
     if (fit !== 'contain' || !ratio || stage.w <= 0 || stage.h <= 0) return null;
+    const effectiveRatio = Math.max(0.9, Math.min(1.5, ratio));
     const plaqueH = showPlaque ? 38 : 0;
     const maxW = Math.max(0, stage.w);
     const maxH = Math.max(0, stage.h - plaqueH);
@@ -104,12 +105,12 @@ export function ArtFrame({ art, onOpen, variant = 'gold', showPlaque = true, fit
     const availImgH = Math.max(1, maxH - 16);
     let imgW: number;
     let imgH: number;
-    if (availImgW / availImgH > ratio) {
+    if (availImgW / availImgH > effectiveRatio) {
       imgH = availImgH;
-      imgW = availImgH * ratio;
+      imgW = availImgH * effectiveRatio;
     } else {
       imgW = availImgW;
-      imgH = availImgW / ratio;
+      imgH = availImgW / effectiveRatio;
     }
     return {
       w: Math.min(maxW, Math.round(imgW + 16)),

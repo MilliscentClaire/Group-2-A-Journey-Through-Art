@@ -234,28 +234,29 @@ function HeritageSpotlight({ s, open }: { s: PortfolioSlide; open: (a: Artwork) 
   );
 }
 
-/** Catalogue of crafts: one card per artwork with image + Featured / Cultural Context / Significance notes. */
+/** Catalogue of crafts: one card per artwork with square image + Featured / Cultural Context / Significance notes. */
 function CraftCatalog({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => void }) {
   const arts = s.artworks;
-  const cols = arts.length > 4 ? 3 : arts.length;
+  const cols = arts.length <= 4 ? 2 : 3;
+  const isTwoByTwo = cols === 2;
   return (
     <div className="flex flex-col h-full gap-3">
       <div className="flex items-end justify-between gap-8">
         <div><div data-anim className="okir-band h-1.5 w-28 mb-2" /><Title s={s} size={28} /></div>
         <p data-anim className="text-[10.5px] text-muted max-w-[380px] leading-snug text-right">{s.conciseExplanation[0]}</p>
       </div>
-      <div className="grid gap-3 flex-1 min-h-0" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))`, gridTemplateRows: `repeat(${Math.ceil(arts.length / cols)}, minmax(0,1fr))` }}>
+      <div className="grid gap-3.5 flex-1 min-h-0" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))`, gridTemplateRows: `repeat(${Math.ceil(arts.length / cols)}, minmax(0,1fr))` }}>
         {arts.map((a) => (
-          <div key={a.id} data-anim className="plaque-border bg-card/50 p-2 flex min-h-0 gap-2.5 border-t-2 border-t-terra">
-            <div className="w-[34%] shrink-0 flex flex-col min-h-0">
+          <div key={a.id} data-anim className="plaque-border bg-card/50 p-3 flex items-center min-h-0 gap-3.5 border-t-2 border-t-terra">
+            <div className={`${isTwoByTwo ? 'w-[174px] h-[174px]' : 'w-[120px] h-[120px]'} aspect-square shrink-0 flex flex-col`}>
               <ArtFrame art={a} onOpen={open} variant="terra" fit="cover" showPlaque={false} className="flex-1" />
             </div>
             <FitColumn className="gap-1">
-              <div className="font-serif text-[14px] font-semibold leading-tight text-ink">{a.title}</div>
-              <div className="font-mono text-[7.5px] tracking-wider uppercase text-terra truncate">{a.artist}</div>
+              <div className={`font-serif ${isTwoByTwo ? 'text-[16px]' : 'text-[14px]'} font-semibold leading-tight text-ink`}>{a.title}</div>
+              <div className="font-mono text-[8px] tracking-wider uppercase text-terra truncate">{a.artist}</div>
               {a.notes?.map((n) => (
-                <p key={n.label} className="text-[8.6px] leading-[1.38] text-ink/85">
-                  <span className="font-mono text-[7px] tracking-widest uppercase text-terra">{n.label} — </span>{n.text}
+                <p key={n.label} className={`${isTwoByTwo ? 'text-[9.6px] leading-[1.42]' : 'text-[8.6px] leading-[1.38]'} text-ink/85`}>
+                  <span className="font-mono text-[7.5px] tracking-widest uppercase text-terra">{n.label} — </span>{n.text}
                 </p>
               ))}
             </FitColumn>
