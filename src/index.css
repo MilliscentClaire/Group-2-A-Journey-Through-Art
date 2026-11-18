@@ -30,15 +30,39 @@
 
 /* ---------- Editorial Parchment Light Mode ---------- */
 html.light {
-  --wall: #f7f4ef;
-  --wall-2: #eee8dd;
-  --card: #fffdf8;
-  --ink: #1d1a16;
-  --muted: rgba(29, 26, 22, 0.66);
-  --line: rgba(160, 120, 50, 0.32);
-  --mat: #e6dfd2;
-  --spot: rgba(197, 160, 89, 0.22);
+  --wall: #e6d9bd;
+  --wall-2: #d9cba8;
+  --card: #efe4ca;
+  --ink: #2a2017;
+  --muted: rgba(42, 32, 23, 0.72);
+  --line: rgba(130, 90, 35, 0.4);
+  --mat: #cfbf9b;
+  --spot: rgba(176, 125, 48, 0.24);
+  --color-gold: #946d27;
+  --color-terra: #a14b2a;
   color-scheme: light;
+}
+/* aged-paper vignette: warm centre, deeper sepia edges */
+html.light .slide-canvas {
+  background:
+    radial-gradient(ellipse 85% 80% at 50% 45%, rgba(241, 230, 203, 0.55), transparent 70%),
+    radial-gradient(ellipse 120% 110% at 50% 50%, transparent 55%, rgba(150, 110, 55, 0.22) 100%),
+    var(--wall);
+}
+html.light .frame-mat,
+html.light .frame-terra {
+  box-shadow:
+    0 0 0 1px rgba(148, 109, 39, 0.5),
+    0 0 0 6px var(--wall-2),
+    0 0 0 7px rgba(148, 109, 39, 0.3),
+    0 18px 34px -18px rgba(60, 40, 15, 0.55);
+}
+html.light .frame-terra {
+  box-shadow:
+    0 0 0 1px rgba(161, 75, 42, 0.6),
+    0 0 0 6px var(--wall-2),
+    0 0 0 7px rgba(161, 75, 42, 0.35),
+    0 18px 34px -18px rgba(60, 40, 15, 0.55);
 }
 
 html, body, #root { height: 100%; }
