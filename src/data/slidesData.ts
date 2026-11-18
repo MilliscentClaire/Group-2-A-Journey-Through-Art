@@ -27,16 +27,16 @@ export const COURSE = {
 /** ✏️ Replace "Member 1A" etc. with real names — every slide updates automatically. */
 export const GROUP_MEMBERS: GroupMember[] = [
   { id: 'L', name: 'Milliscent Claire D. Blanqueza', role: 'Group Leader · Lead Curator & Editor', pair: 'Leader', pages: '1–3, REF-1, REF-2, ROLES', sections: 'Front Matter & Back Matter', contributions: 'Cover, TOC, curatorial introduction; overall editing, layout direction, reference compilation, AI disclosure & final PDF export.' },
-  { id: '1A', name: 'Member 1A', role: 'Researcher-Writer', pair: 'Pair 1', pages: '4–6', sections: 'Part 1: Understanding Art', contributions: 'Definition & nature of art, assumptions of art, functions & philosophies; sourced exemplar artworks.' },
-  { id: '1B', name: 'Member 1B', role: 'Visual Analyst', pair: 'Pair 1', pages: '7–9', sections: 'Part 1: Understanding Art', contributions: 'Subject vs. content breakdown; elements & principles of design callouts and visual annotations.' },
+  { id: '1A', name: 'Hazel Calalo', role: 'Content Researcher & Analyst (Part 1A)', pair: 'Pair 1', pages: '4–6', sections: 'Part 1: Understanding Art (Items 1 & 2)', contributions: 'Researched and wrote original explanations defining art, its nature, and core assumptions; discussed and analyzed the functions and philosophies of art with cited visual examples and references.' },
+  { id: '1B', name: 'Althea Boletic', role: 'Content Researcher & Analyst (Part 1B)', pair: 'Pair 1', pages: '7–9', sections: 'Part 1: Understanding Art (Items 3 & 4)', contributions: 'Authored comparative analysis explaining the difference between subject and content using specific artworks; presented and analyzed the elements and principles of design with illustrated artwork examples and proper citations.' },
   { id: '2A', name: 'Member 2A', role: 'Art Historian-Writer', pair: 'Pair 2', pages: '10–12', sections: 'Part 2: Western Art Traditions', contributions: 'Periods overview, characteristics & contexts timeline, Classical–Baroque masters.' },
   { id: '2B', name: 'Member 2B', role: 'Critical Analyst', pair: 'Pair 2', pages: '13–15', sections: 'Part 2: Western Art Traditions', contributions: 'Impressionism–Modern masters; critical analyses on patronage, religion, society & Enlightenment.' },
-  { id: '3A', name: 'Member 3A', role: 'Asian Art Researcher', pair: 'Pair 3', pages: '16–18', sections: 'Part 3: Asian & Philippine Art', contributions: 'Chinese, Japanese & Indian art characteristics; comparative Asian analysis.' },
-  { id: '3B', name: 'Member 3B', role: 'Philippine Crafts Researcher', pair: 'Pair 3', pages: '19–21', sections: 'Part 3: Asian & Philippine Art', contributions: 'Indigenous textiles, pottery, carving & metalwork; Asian trade influences.' },
+  { id: '3A', name: 'Sean Rey O. Dizon', role: 'Content Researcher & Analyst (Part 3A)', pair: 'Pair 3', pages: '16–18', sections: 'Part 3: Asian & Philippine Art (Items 1 & 2)', contributions: 'Explained the distinct characteristics of Chinese, Japanese and Indian art traditions; conducted a comparative analysis of selected Asian artworks focusing on their cultural and historical significance, including citations.' },
+  { id: '3B', name: 'Brian Rene R. De los Santos', role: 'Content Researcher & Analyst (Part 3B)', pair: 'Pair 3', pages: '19–21', sections: 'Part 3: Asian & Philippine Art (Items 3 & 4)', contributions: 'Presented and analyzed examples of Philippine indigenous art and traditional crafts; explained how Asian cultures and traditions influenced Philippine artistic practices using concrete visual examples and credible sources.' },
   { id: '4A', name: 'Member 4A', role: 'Bikolano Heritage Researcher', pair: 'Pair 4', pages: '22–24', sections: 'Part 4: Philippine & Bikolano Heritage', contributions: 'Bikol visual/applied, literary & performing arts; artisans, landmarks & Peñafrancia spotlight.' },
   { id: '4B', name: 'Member 4B', role: 'Cultural Significance Analyst', pair: 'Pair 4', pages: '25–27', sections: 'Part 4: Philippine & Bikolano Heritage', contributions: 'Historical, social & livelihood significance; heritage preservation strategies.' },
   { id: '5A', name: 'Member 5A', role: 'Contemporary Art Researcher', pair: 'Pair 5', pages: '28–30', sections: 'Part 5: Contemporary Art & Innovation', contributions: 'Contemporary Philippine art overview, diverse forms, appropriation & improvisation.' },
-  { id: '5B', name: 'Member 5B', role: 'Formal Critic', pair: 'Pair 5', pages: '31–33', sections: 'Part 5: Contemporary Art & Innovation', contributions: 'Formal critiques (design, space, scale, mixed media) and art as social commentary.' },
+  { id: '5B', name: 'Jhov Joshua E. Galvan', role: 'Content Researcher & Analyst (Part 5B)', pair: 'Pair 5', pages: '31–33', sections: 'Part 5: Contemporary Art & Innovation (Items 3 & 4)', contributions: 'Critiqued how contemporary artists utilize the elements and principles of design in modern works (Slides 31–32); analyzed how contemporary art communicates ideas, addresses social issues, and responds to societal changes, with references (Slide 33).' },
 ];
 
 const by = (id: string): string => {
@@ -164,6 +164,155 @@ const R = {
 };
 
 /* ---------------------------------------------------------------------
+ * 4b. SUBMITTED CONTENT — PART 1 & PART 3 (from src/documents/*.docx)
+ *     Local images are picked up automatically from /src/images/PART X/
+ *     (matched by file name, any extension). Drop a missing file in with
+ *     the name shown on its placeholder and it will appear.
+ * ------------------------------------------------------------------- */
+const LOCAL_IMAGES = import.meta.glob('../images/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const stem = (p: string) => (p.split('/').pop() ?? '').replace(/\.[^.]+$/, '').toLowerCase();
+/** First local file whose name matches one of `names`; otherwise the /public path shown on the placeholder. */
+const localImg = (...names: string[]): string => {
+  for (const n of names) {
+    const hit = Object.entries(LOCAL_IMAGES).find(([k]) => stem(k) === n.toLowerCase());
+    if (hit) return hit[1];
+  }
+  return `/images/${names[0]}.jpg`;
+};
+
+interface SubmittedOpts { names: string[]; commons?: string; tags?: string[]; notes?: { label: string; text: string }[] }
+function S(id: string, title: string, artist: string, yearOrPeriod: string, mediumOrOrigin: string, caption: string, sourceUrl: string, o: SubmittedOpts): Artwork {
+  return { id, title, artist, yearOrPeriod, mediumOrOrigin, imageUrl: o.commons ? wm(o.commons) : '', localImagePath: localImg(...o.names), caption, sourceUrl, calloutTags: o.tags, notes: o.notes };
+}
+
+const P1 = {
+  starryNight: S('starry-night', 'The Starry Night', 'Vincent van Gogh', '1889', 'Oil on canvas', 'The Starry Night — Vincent van Gogh, 1889. Oil on canvas.', 'https://www.moma.org/collection/works/79802', { names: ['The Starry Night'], commons: 'Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg' }),
+  guernica: S('guernica', 'Guernica', 'Pablo Picasso', '1937', 'Oil on canvas', 'Guernica — Pablo Picasso, 1937. Oil on canvas.', 'https://www.museoreinasofia.es/en/collections/artwork/guernica-0', { names: ['Guernica'] }),
+  americanGothic: S('american-gothic', 'American Gothic', 'Grant Wood', '1930', 'Oil on beaverboard', 'American Gothic — Grant Wood, 1930. Oil on beaverboard.', 'https://commons.wikimedia.org/wiki/File%3AArt_Institute_of_Chicago-0955.jpg', { names: ['Part1_Slide4_AmericanGothic', 'American Gothic'], commons: 'Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg' }),
+  nighthawks: S('nighthawks', 'Nighthawks', 'Edward Hopper', '1942', 'Oil on canvas', 'Nighthawks — Edward Hopper, 1942. Oil on canvas.', 'https://blog.artsper.com/en/a-closer-look/artwork-analysis-nighthawks-by-edward-hopper/', { names: ['Part1_Slide4_Nighthawks', 'Nighthawks'], commons: 'Nighthawks_by_Edward_Hopper_1942.jpg' }),
+  greatWave: S('great-wave', 'The Great Wave off Kanagawa', 'Katsushika Hokusai', '1830–1832', 'Woodblock print, ink and color on paper', 'Under the Wave off Kanagawa — Katsushika Hokusai, 1830–1832. Woodblock print, ink and color on paper.', 'https://www.metmuseum.org/art/collection/search/45434', { names: ['Part1_Slide5_GreatWave', 'Part3_Slide1_Hokusai_GreatWave'], commons: 'Tsunami_by_hokusai_19th_century.jpg' }),
+  bedroom: S('the-bedroom', 'The Bedroom', 'Vincent van Gogh', '1889', 'Oil on canvas', 'The Bedroom — Vincent van Gogh, 1889. Oil on canvas.', 'https://www.artic.edu/artworks/28560/the-bedroom', { names: ['Part1_Slide6_TheBedroom', 'The Bedroom'], commons: 'Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg' }),
+};
+
+const C1 = {
+  starryNight: 'The Museum of Modern Art. (n.d.). Vincent van Gogh. The Starry Night. Saint Rémy, June 1889. https://www.moma.org/collection/works/79802',
+  guernica: 'Museo Nacional Centro de Arte Reina Sofía. (n.d.). Guernica. https://www.museoreinasofia.es/en/collections/artwork/guernica-0',
+  americanGothic: 'Whitney Museum of American Art. (n.d.). Grant Wood: American Gothic and other fables. https://commons.wikimedia.org/wiki/File%3AArt_Institute_of_Chicago-0955.jpg',
+  nighthawks: 'The Art Institute of Chicago. (n.d.). Nighthawks. https://blog.artsper.com/en/a-closer-look/artwork-analysis-nighthawks-by-edward-hopper/',
+  greatWave: 'The Metropolitan Museum of Art. (n.d.). Under the wave off Kanagawa (Kanagawa oki nami ura), also known as The Great Wave. https://www.metmuseum.org/art/collection/search/45434',
+  bedroom: 'The Art Institute of Chicago. (n.d.). The bedroom. https://www.artic.edu/artworks/28560/the-bedroom',
+};
+
+const P3 = {
+  fanKuan: S('fan-kuan', 'Travelers Among Mountains and Streams', 'Fan Kuan', 'Northern Song Dynasty, ca. 1000 CE', 'Hanging scroll, ink and light colors on silk', 'Travelers Among Mountains and Streams — Fan Kuan, Northern Song Dynasty, ca. 1000 CE. Hanging scroll, ink and light colors on silk.', 'https://artsandculture.google.com/asset/WAHwkSr8lMK0uA', { names: ['Part3_Slide1_FanKuan_TravelersMountainsStreams', 'Part3_Slide3_FanKuan'], commons: 'Fan_Kuan_-_Travelers_Among_Mountains_and_Streams_-_Google_Art_Project.jpg' }),
+  greatWave: S('great-wave-p3', 'Under the Wave off Kanagawa (The Great Wave)', 'Katsushika Hokusai', 'Edo period, ca. 1830–32', 'Woodblock print, ink and color on paper', 'Under the Wave off Kanagawa (The Great Wave) — Katsushika Hokusai, Edo period, ca. 1830–32. Woodblock print, ink and color on paper.', 'https://www.metmuseum.org/art/collection/search/39799', { names: ['Part3_Slide1_Hokusai_GreatWave', 'Part3_Slide3_GreatWave'], commons: 'Tsunami_by_hokusai_19th_century.jpg' }),
+  nataraja: S('nataraja', 'Shiva as Lord of the Dance (Shiva Nataraja)', 'Chola artisans', 'Chola period, ca. late 11th century CE', 'Copper alloy (bronze) · Tamil Nadu, South India', 'Shiva as Lord of the Dance (Shiva Nataraja) — Chola period, Tamil Nadu, South India, ca. late 11th century CE. Copper alloy (bronze).', 'https://www.metmuseum.org/art/collection/search/39328', { names: ['Part3_Slide2_Nataraja_Chola'], commons: 'Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg' }),
+
+  // ---- Slide 4 (Weaving & Textile Arts) ----
+  tnalak: S('tnalak', 'T’nalak', 'T’boli community', 'Living tradition', 'Abaca ikat · Lake Sebu, South Cotabato', 'T’nalak weaver at Lake Sebu, South Cotabato.', 'https://commons.wikimedia.org/wiki/File:T%27nalak_weaver_at_Lake_Sebu,_South_Cotabato.jpg', {
+    names: ['Part3_Slide4_Tboli_TnalakWeaver_LakeSebu'], commons: 'T\'nalak_weaver_at_Lake_Sebu,_South_Cotabato.jpg',
+    notes: [
+      { label: 'Featured', text: 'Made from abaca fibers by T’boli women. Its patterns are inspired by dreams and nature.' },
+      { label: 'Cultural Context', text: 'T’nalak is a traditional cloth made by T’boli women in Lake Sebu, South Cotabato. It is woven from abaca fibers using the ikat technique. The designs are believed to be inspired by dreams.' },
+      { label: 'Significance', text: 'T’nalak represents the T’boli people’s beliefs, traditions, and connection to nature. It is also used in important ceremonies and cultural celebrations.' },
+    ] }),
+  inabel: S('inabel', 'Inabel', 'Ilocano community', 'Living tradition', 'Cotton, traditional loom · Ilocos Region', 'Candon Inabel cotton loom weaving.', 'https://commons.wikimedia.org/wiki/File:Candon_Inabel_cotton_loom_weavingA.jpg', {
+    names: ['Part3_Slide4_Ilocano_InabelWeaving'], commons: 'Candon_Inabel_cotton_loom_weavingA.jpg',
+    notes: [
+      { label: 'Featured', text: 'Woven from cotton using traditional looms. Its patterns show Ilocano culture and daily life.' },
+      { label: 'Cultural Context', text: 'Inabel is a traditional textile made by Ilocano weavers in the Ilocos Region. It is woven using cotton threads and traditional wooden looms. Its designs include stripes and geometric patterns.' },
+      { label: 'Significance', text: 'Inabel reflects Ilocano creativity and everyday life. It is commonly used for blankets, clothing, and household items, while preserving traditional weaving skills.' },
+    ] }),
+  yakan: S('yakan', 'Yakan Weaving', 'Yakan community', 'Living tradition', 'Backstrap loom textile · Basilan', 'Yakan weavers.', 'https://commons.wikimedia.org/wiki/File:Yakan_Weavers.jpg', {
+    names: ['Part3_Slide4_Yakan_WeavingBasilan'], commons: 'Yakan_Weavers.jpg',
+    notes: [
+      { label: 'Featured', text: 'Made using colorful threads and traditional looms. Its patterns represent their culture and identity.' },
+      { label: 'Cultural Context', text: 'Yakan weaving is a traditional craft of the Yakan people of Basilan. It is usually made by women using colorful threads and backstrap looms. The patterns are inspired by nature and their surroundings.' },
+      { label: 'Significance', text: 'Its colorful geometric designs represent Yakan identity, culture, and traditions. Weaving is also an important skill passed down through generations.' },
+    ] }),
+  inaul: S('inaul', 'Inaul', 'Maguindanaon community', 'Living tradition', 'Handwoven cotton & threads · Maguindanao', 'Traditional Maguindanao Inaul weaving.', 'https://anthillfabrics.com/collections/inaul', {
+    names: ['Part3_Slide4_Maguindanaon_InaulFabric'],
+    notes: [
+      { label: 'Featured', text: 'A handwoven textile made from cotton and other threads. Its colorful designs represent Maguindanaon traditions.' },
+      { label: 'Cultural Context', text: 'Inaul is a traditional handwoven fabric of the Maguindanaon people. It is made using different threads and traditional looms, often used to create the malong, a long piece of cloth worn around the body.' },
+      { label: 'Significance', text: 'Its colorful designs represent Maguindanaon identity, traditions, and cultural pride. It is worn during special occasions and cultural celebrations.' },
+    ] }),
+  pisSyabit: S('pis-syabit', 'Pis Syabit', 'Tausug community', 'Living tradition', 'Woven cloth · Sulu', 'Traditional Pis Syabit weaving.', 'https://www.exptravelph.com/post/charmed-by-barmm', {
+    names: ['Part3_Slide4_Tausug_PisSyabit'],
+    notes: [
+      { label: 'Featured', text: 'A colorful cloth traditionally woven in Sulu. Its geometric patterns show Tausug culture and creativity.' },
+      { label: 'Cultural Context', text: 'Pis Syabit is a traditional square-shaped cloth made by Tausug weavers in Sulu. It is woven using colorful threads and detailed geometric patterns. It is traditionally worn as a head covering.' },
+      { label: 'Significance', text: 'Its intricate designs show the creativity and weaving skills of the Tausug people. It also represents their cultural identity and traditional craftsmanship.' },
+    ] }),
+  dagmay: S('dagmay', 'Dagmay', 'Mandaya community', 'Living tradition', 'Abaca ikat · Mindanao', 'Dagmay (Mandaya abaca textile).', 'https://philippinestudies.uk/mapping/items/show/35162', {
+    names: ['Part3_Slide4_Mandaya_DagmayTextile'],
+    notes: [
+      { label: 'Featured', text: 'Made from abaca fibers using the ikat technique. Its designs reflect Mandaya beliefs and traditions.' },
+      { label: 'Cultural Context', text: 'Dagmay is a traditional textile made by the Mandaya people of Mindanao. It is woven from abaca fibers using the ikat technique, where threads are tied and dyed before weaving.' },
+      { label: 'Significance', text: 'Its patterns reflect Mandaya beliefs, traditions, and connection to their ancestors. It is an important part of their cultural identity and heritage.' },
+    ] }),
+
+  // ---- Slide 5 (Pottery, Carving & Metalwork) ----
+  manunggul: S('manunggul', 'Manunggul Jar', 'Early Filipinos · Palawan', 'c. 890–710 BC', 'Clay burial jar · Manunggul Cave, Palawan', 'Manunggul Jar displayed at the Philippine National Museum of Anthropology.', 'https://commons.wikimedia.org/wiki/File:Manunggul_Jar_displayed_at_Philippine_National_Museum_of_Anthropology.jpg', {
+    names: ['Part3_Slide5_ManunggulJar_Palawan'], commons: 'Manunggul_Jar_displayed_at_Philippine_National_Museum_of_Anthropology.jpg',
+    notes: [
+      { label: 'Featured', text: 'The Manunggul Jar is an ancient burial jar made of clay, discovered in Manunggul Cave, Palawan. Its lid features two human figures riding a boat.' },
+      { label: 'Cultural Context', text: 'It was used by early Filipinos as a secondary burial vessel for the remains of the dead. It dates back to around 890–710 BC.' },
+    ] }),
+  bulul: S('bulul', 'Bulul Carving', 'Ifugao community · Northern Luzon', 'Traditional', 'Carved wood', 'Bulul (rice deity figure).', 'https://www.metmuseum.org/art/collection/search/626371', {
+    names: ['Part3_Slide5_BululCarving_Ifugao'],
+    notes: [
+      { label: 'Featured', text: 'Bulul is a wooden human-like figure carved by the Ifugao people of Northern Luzon. It is commonly displayed in pairs of male and female figures.' },
+      { label: 'Cultural Context', text: 'It is traditionally placed inside rice granaries and is involved in rituals related to rice farming and harvesting. The figures are carved from wood and consecrated through traditional ceremonies.' },
+      { label: 'Significance', text: 'Bulul is believed to protect stored rice and bring a successful harvest. It also represents the Ifugao people’s respect for their ancestors and spiritual beliefs.' },
+    ] }),
+  okir: S('okir-sarimanok', 'Okir / Sarimanok', 'Maranao community · Lanao del Sur', 'Traditional', 'Wood carving & decorative art', 'Sarimanok (Maranao carving).', 'https://betterbarmm.com/crafts', {
+    names: ['Part3_Slide5_Okir_Sarimanok_Maranao'],
+    notes: [
+      { label: 'Featured', text: 'Okir is a traditional decorative art featuring flowing patterns of plants, leaves, and geometric shapes. Sarimanok is a famous Maranao bird figure, usually shown holding a fish in its beak.' },
+      { label: 'Cultural Context', text: 'These art forms are traditionally created by Maranao artisans in Lanao del Sur. Okir designs are used in wood carvings, houses, furniture, and other decorative objects.' },
+      { label: 'Significance', text: 'Okir represents Maranao creativity and cultural identity, while the Sarimanok is associated with good fortune and is an important symbol of Maranao art and tradition.' },
+    ] }),
+  linglingo: S('lingling-o', 'Lingling-o', 'Cordillera community', 'Ancient', 'C-shaped ornament (jade, gold, stone)', 'Lingling-o, Museo Kordilyera.', 'https://museokordilyera.upb.edu.ph/museum-collections/lingling-o/', {
+    names: ['Part3_Slide5_LinglingO_TraditionalPendant'],
+    notes: [
+      { label: 'Featured', text: 'Lingling-o is an ancient C-shaped ornament commonly made from jade, gold, stone, or other materials. It was traditionally worn as a necklace or pendant.' },
+      { label: 'Cultural Context', text: 'It was used by early communities in the Cordillera region, including the Ifugao, Kalinga, and Bontoc peoples. It was worn by both men and women as personal jewelry.' },
+      { label: 'Significance', text: 'Lingling-o is associated with fertility and protection. It also reflects the craftsmanship, beliefs, and social traditions of early Filipino communities.' },
+    ] }),
+};
+
+const C3 = {
+  fanKuan: 'Fan, K. (ca. 1000). Travelers among mountains and streams [Hanging scroll, ink and light colors on silk]. National Palace Museum, Taipei, Taiwan. https://artsandculture.google.com/asset/WAHwkSr8lMK0uA',
+  greatWave: 'Hokusai, K. (ca. 1830–32). Under the wave off Kanagawa (Kanagawa oki nami ura), or The Great Wave, from the series Thirty-six views of Mount Fuji [Woodblock print]. The Metropolitan Museum of Art, New York, NY, United States. https://www.metmuseum.org/art/collection/search/39799',
+  lumen: 'Lumen Learning. (n.d.). Neo-Confucianism and Fan Kuan’s Travelers by Streams and Mountains. https://courses.lumenlearning.com/suny-purchase-artappreciation/?p=408',
+  nataraja: 'The Metropolitan Museum of Art. (n.d.). Shiva as Lord of Dance (Nataraja) [Copper alloy]. https://www.metmuseum.org/art/collection/search/39328',
+  khalid: 'Khalid, F. (2015, August 9). Shiva as Lord of the Dance (Nataraja). Smarthistory. https://smarthistory.org/shiva-as-lord-of-the-dance-nataraja/',
+  tnalak: 'I Travel Philippines. (2014). T\'nalak weaver at Lake Sebu, South Cotabato [Photograph]. Wikimedia Commons. https://commons.wikimedia.org/wiki/File:T%27nalak_weaver_at_Lake_Sebu,_South_Cotabato.jpg',
+  inabel: 'Valenzuela400. (2024). Candon Inabel cotton loom weaving [Photograph]. Wikimedia Commons. https://commons.wikimedia.org/wiki/File:Candon_Inabel_cotton_loom_weavingA.jpg',
+  yakan: 'Rauxilian. (2025). Yakan weavers [Photograph]. Wikimedia Commons. https://commons.wikimedia.org/wiki/File:Yakan_Weavers.jpg',
+  inaul: 'ANTHILL Fabrics. (n.d.). Traditional Maguindanao Inaul weaving [Photograph]. ANTHILL Fabrics. https://anthillfabrics.com/collections/inaul',
+  pisSyabit: 'Experience Travel PH. (n.d.). Traditional Pis Siyabit weaving [Photograph]. Experience Travel PH. https://www.exptravelph.com/post/charmed-by-barmm',
+  dagmay: 'Mapping Philippine Material Culture. (n.d.). Dagmay (Mandaya abaca textile) [Photograph]. Mapping Philippine Material Culture. https://philippinestudies.uk/mapping/items/show/35162',
+  manunggul: 'Nueva, J. S. (2019). Manunggul Jar displayed at Philippine National Museum of Anthropology [Photograph]. Wikimedia Commons. https://commons.wikimedia.org/wiki/File:Manunggul_Jar_displayed_at_Philippine_National_Museum_of_Anthropology.jpg',
+  bulul: 'The Metropolitan Museum of Art. (n.d.). Bulul (male rice deity figure) [Photograph]. The Metropolitan Museum of Art. https://www.metmuseum.org/art/collection/search/626371',
+  sarimanok: 'BetterBARMM. (n.d.). Sarimanok (Maranao carving) [Photograph]. Living Crafts of the Bangsamoro. https://betterbarmm.com/crafts',
+  linglingo: 'Museo Kordilyera. (n.d.). Lingling-o [Photograph]. Museo Kordilyera, University of the Philippines Baguio. https://museokordilyera.upb.edu.ph/museum-collections/lingling-o/',
+};
+
+const P5 = {
+  arkipelago: S('arkipelago', 'Arkipelago', 'Mark Justiniani', '2019', 'Mixed media installation (mirrors, glass, metal frames, LED lights, found objects)', 'Arkipelago — Mark Justiniani, 2019. Mixed media installation.', 'https://lifestyle.inquirer.net/339984/at-58th-venice-biennale-philippine-arkipelago-rises/', { names: ['arkipelago'] }),
+  mebuyan: S('mebuyans-colony', 'Mebuyan’s Colony', 'Leeroy New', '2022', 'Mixed media installation (bamboo, recycled plastic, cable ties)', 'Mebuyan’s Colony — Leeroy New, 2022. Mixed media installation.', 'https://www.tatlerasia.com/lifestyle/arts/leeroy-new-mebuyan-colony-and-mebuyan-vessel', { names: ['mebuyanscolony'] }),
+  lupang: S('lupang-ninuno', 'Lupang Ninuno (Mural advocating for Lumad rights)', 'Archie Oclos', '2018', 'Mural', 'Lupang Ninuno — Archie Oclos, 2018. Mural advocating for Lumad rights.', 'https://archieoclos.com/passion-projects-slides/#ninuno', { names: ['lupangninuno'] }),
+};
+
+const C5 = {
+  arkipelago: 'Baga-Reyes, V. (2019, July 8). At 58th Venice Biennale, Philippine \'Arkipelago\' rises. Philippine Daily Inquirer. https://lifestyle.inquirer.net/339984/at-58th-venice-biennale-philippine-arkipelago-rises/',
+  mebuyan: 'Sorilla IV, F. (2023, April 27). Leeroy New on his monumental works, Mebuyan\'s Colony and Mebuyan\'s Vessel. Tatler Asia. https://www.tatlerasia.com/lifestyle/arts/leeroy-new-mebuyan-colony-and-mebuyan-vessel',
+  lupang: 'Oclos, A. (2018). Passion Projects: Lupang Ninuno. Archie Oclos. https://archieoclos.com/passion-projects-slides/#ninuno',
+};
+
+/* ---------------------------------------------------------------------
  * 5. THE 33 CORE PAGES + 3 BACK MATTER PAGES
  * ------------------------------------------------------------------- */
 type Draft = Omit<PortfolioSlide, 'partTitle'>;
@@ -211,108 +360,104 @@ const DRAFTS: Draft[] = [
   // ======================= PART 1 =======================
   {
     pageNumber: 4, partNumber: 1, slideLayout: 'single-masterpiece',
-    title: 'Defining Art & Its Nature',
-    subtitle: 'What makes something “art”?',
+    title: 'What Is Art? Understanding Its Meaning and Nature',
+    subtitle: 'Definition & Nature of Art',
     assignedMember: by('1A'),
     conciseExplanation: [
-      'The word art comes from the Latin ars, meaning skill or craft. Today it describes the deliberate arrangement of materials, sounds, movements or ideas to produce something that appeals to the senses, emotions and intellect. Art is a human activity — it requires intention, imagination and a maker who shapes raw experience into form.',
-      'Its nature is both expressive and communicative. A painting such as the Mona Lisa is pigment on wood, yet it transmits a mood, a worldview and a technical achievement across five centuries. Art therefore exists in the meeting between object, creator and viewer.',
+      'Art is a way of expression, allowing people to share their opinions, emotions, experiences and thoughts. Art takes many different forms including; painting, sculpture, music literature, dancing, architecture and many more. However art is not just creating something beautiful, it is also a way of conveying messages and sharing thoughts about life.',
     ],
     criticalAnalysis: {
-      heading: 'Art Lives in the Encounter',
-      content: 'Leonardo’s sfumato does not depict a smile so much as invite us to complete one. The ambiguity is the art: meaning is co-produced each time a viewer looks, which is why the painting still feels alive.',
-      culturalHistoricalContext: 'Renaissance humanism elevated the painter from artisan to intellectual — a shift that shaped modern definitions of “Art.”',
+      heading: 'Application: The Starry Night',
+      content: 'The painting "The Starry Night" by Van Gogh portrays the idea that art can be used not only to reflect reality. Although there are swirling night skies and villages, the artist used the power of imagination and applied certain forms, colors and techniques which means that art can transform simple moments into something amazing and meaningful. This proves that the point of an artist is not to reflect reality, but provide their own interpretations.',
     },
-    artworks: [ART.monaLisa],
-    citations: [R.caslib, R.gombrich, R.dewey],
+    artworks: [P1.starryNight],
+    citations: [C1.starryNight],
   },
   {
     pageNumber: 5, partNumber: 1, slideLayout: 'design-breakdown',
-    title: 'Core Assumptions of Art',
-    subtitle: 'Universal · Cultural · Not Nature · Involves Experience',
+    title: 'Understanding the Four Core Assumptions of Art',
+    subtitle: 'Core Assumptions of Art',
     assignedMember: by('1A'),
     conciseExplanation: [
-      'Art is universal: every known society, from Palawan’s Tabon cave dwellers to Renaissance Florence, has made art. Art is cultural: it reflects the values and symbols of the community that creates it. Art is not nature: it is a human transformation of nature, an interpretation rather than a copy.',
-      'Finally, art involves experience. It is not merely an object but an event of perception — Dewey called it “an experience” that is complete, felt and meaningful. Hokusai’s Great Wave illustrates all four: a Japanese print, globally beloved, that stylises nature into an unforgettable experience.',
+      'Art is Universal - Art is found in different societies and time periods. People from different backgrounds and cultures use art to express their feelings, thoughts and experiences.',
+      'Art is Cultural - Art is the representation of traditions, beliefs, values and identity of the culture it was created in.',
+      'Art is not Nature - Although nature can be a source of inspiration, Art is man made, creative and intentional. The artists transform their ideas and observations into a piece of art.',
+      'Art involves Experience - Art goes beyond the act of producing an artwork; it also means experiencing its creation process, perception, interpretation, and appreciating it.',
     ],
     criticalAnalysis: {
-      heading: 'The Wave Is Not the Sea',
-      content: 'Hokusai’s claw-like foam could never be photographed; it is a designed wave. By exaggerating nature he makes us feel its power — proof that art’s truth lies in interpretation, not imitation.',
-      culturalHistoricalContext: 'Prussian blue, newly imported from Europe, gave the print its intense colour — a sign of cultural exchange within “universal” art.',
+      heading: 'Application: The Starry Night',
+      content: 'Van Gogh’s The Starry Night represents this assumption as it shows the night sky. This is something that can be enjoyed by many people in different cultures and times. This shows how art is universal. The painting shows how the artist has put their personal experiences, imagination and artistic views into this piece of art. Although there is a night sky in nature Van Gogh used his observations and expressed them by using his creativity. When people look at this painting they may feel different emotions and interpret the painting differently.',
     },
-    artworks: [{ ...ART.greatWave, calloutTags: ['Universal appeal', 'Japanese culture', 'Nature transformed', 'Felt experience'] }],
-    citations: [R.caslib, R.dewey, R.mason],
+    artworks: [{ ...P1.starryNight, calloutTags: ['Art is Universal', 'Art is Cultural', 'Art is not Nature', 'Art involves Experience'] }],
+    citations: [C1.starryNight],
   },
   {
-    pageNumber: 6, partNumber: 1, slideLayout: 'comparative-split',
-    title: 'Functions & Philosophies of Art',
-    subtitle: 'Personal · Social · Physical — Imitationalism · Formalism · Emotionalism',
+    pageNumber: 6, partNumber: 1, slideLayout: 'single-masterpiece',
+    title: 'The Functions and Philosophies of Art: Beyond Beauty',
+    subtitle: 'Functions & Philosophies of Art',
     assignedMember: by('1A'),
     conciseExplanation: [
-      'Art serves personal functions (self-expression, therapy, devotion), social functions (protest, celebration, identity) and physical functions (architecture, furniture, textiles that are used). One work often serves all three.',
-      'Philosophies tell us how to judge it. Imitationalism values faithful representation; Formalism (Clive Bell’s “significant form”) values line, colour and composition; Emotionalism (Tolstoy) values the transmission of feeling. Vermeer satisfies the imitationalist; Kandinsky rewards the formalist and emotionalist.',
+      'Art has different functions for people and communities and it can be classified into the following: Personal Function - It enables the artists to express their feelings, beliefs, values, imaginations and experiences. Social Function - Art can show social issues, make people aware of their surroundings and think about the society itself. Physical Function - Art is not solely created for viewing but it also have its practical purpose.',
+      'Art can be also be viewed through various philosophies: Art as Representation - This philosophy looks at art as an imitation or depiction of objects, events and even people from the real world. Art as Expression - It looks at art as a way of communicating feelings, thoughts and experiences of the artist. Art as Form - Art is appreciated for its beauty and aesthetics alone.',
     ],
     criticalAnalysis: {
-      heading: 'One Lens Is Never Enough',
-      content: 'Judged by imitation alone, Composition VII “fails.” Judged by form and feeling, it is a symphony. Comparing the two works shows that critical appreciation requires switching lenses rather than applying a single rule.',
-      culturalHistoricalContext: 'Kandinsky wrote Concerning the Spiritual in Art (1911) as photography was making literal imitation less necessary for painters.',
+      heading: 'Application: Guernica',
+      content: 'The image of Picasso\'s Guernica shows how art can be used for social and political purposes. The painting shows how horrible war can be. It was inspired by the bombing of the town Gernika in Spain during the Spanish Civil War. It shows how terrified, painful and helpless innocent civilians felt. The painting uses twisted human and animal figures along with all black, white and grey colours to create an emotive piece of work. This proves that art can be used as a powerful form of protest and tool to make people think about the consequences of violence and the importance of peace.',
     },
-    artworks: [ART.pearl, ART.kandinsky],
-    citations: [R.bell, R.tolstoy, R.caslib],
+    artworks: [P1.guernica],
+    citations: [C1.guernica],
   },
   {
     pageNumber: 7, partNumber: 1, slideLayout: 'comparative-split',
-    title: 'Subject vs. Content',
-    subtitle: 'What we see versus what it means',
+    title: 'Subject vs. Content: Understanding What We See and What It Means',
+    subtitle: 'Subject vs. Content in an Artwork',
     assignedMember: by('1B'),
     conciseExplanation: [
-      'The subject is the literal “what” of an artwork — the person, object, scene or idea depicted. The content is the deeper meaning: the message, emotion or idea the artist communicates through that subject.',
-      'Millet’s Gleaners has a simple subject: three peasant women picking leftover grain. Its content is social — the dignity and hardship of the rural poor in a changing France. Goya’s Third of May shows a firing squad, but its content is a universal indictment of state violence.',
+      'Subject refers to the main person, object, event, or scene represented in an artwork. It answers the question, "What is being shown?" Content refers to the deeper meaning, message, emotion, or idea that the artwork communicates. It answers the question, "What does the artwork mean?"',
+      'American Gothic — Literal Subject: A farmer holding a pitchfork stands beside a woman in front of a farmhouse. Deeper Content/Meaning: Represents traditional American rural life, family values, and cultural identity. The painting also reflects the seriousness and traditional lifestyle associated with rural communities.',
+      'Nighthawks — Literal Subject: Four people are gathered inside a brightly lit diner during the night. Deeper Content/Meaning: Communicates loneliness, isolation, and emotional distance among people living in a busy city.',
     ],
     criticalAnalysis: {
-      heading: 'Reading Beyond the Literal',
-      content: 'Both painters monumentalise ordinary people, but in opposite keys: Millet through quiet bending bodies, Goya through a blazing lantern and outstretched arms. Identical “subjects of the common people” yield distinct content — endurance versus martyrdom.',
-      culturalHistoricalContext: 'Parisian critics of 1857 feared The Gleaners as socialist propaganda — evidence that content, not subject, provokes society.',
+      heading: 'Comparative Analysis',
+      content: 'Both artworks show ordinary people in everyday settings, but their deeper meanings are different. American Gothic presents rural American life and traditional values, while Nighthawks explores loneliness and isolation in modern city life. Their subjects show what is happening in the paintings, but their content allows viewers to understand the cultural and emotional messages behind them. This demonstrates that an artwork can communicate ideas that go beyond its visible appearance.',
     },
     artworks: [
-      { ...ART.gleaners, calloutTags: ['Subject: peasant women gleaning', 'Content: dignity of labour'] },
-      { ...ART.thirdMay, calloutTags: ['Subject: execution', 'Content: inhumanity of war'] },
+      { ...P1.americanGothic, calloutTags: ['Subject: farmer, woman & farmhouse', 'Content: rural values & identity'] },
+      { ...P1.nighthawks, calloutTags: ['Subject: four people in a diner', 'Content: loneliness & isolation'] },
     ],
-    citations: [R.caslib, R.janson, R.hauser],
+    citations: [C1.americanGothic, C1.nighthawks],
   },
   {
     pageNumber: 8, partNumber: 1, slideLayout: 'design-breakdown',
-    title: 'Elements of Design in Action',
-    subtitle: 'Line · Shape · Color · Value · Form · Texture · Space',
+    title: 'The Elements of Design: The Building Blocks of Art',
+    subtitle: 'Elements of Design (With Visual Application)',
     assignedMember: by('1B'),
     conciseExplanation: [
-      'The elements are the visual building blocks of art. In The Starry Night, curving lines spiral across the sky; shapes of stars and moon become radiating discs; complementary blue and yellow color vibrate; value contrasts make the village glow; the cypress gives form; thick impasto creates texture; and overlapping planes build space.',
-      'Recognising elements lets a viewer describe an artwork objectively before interpreting it — the first step of formal analysis.',
+      'Line: A mark that guides the viewer\'s eyes and creates direction, movement, or emotion. Shape: An enclosed area formed by lines, such as circles, squares, and irregular forms. Color: Adds mood, emotion, and visual interest through different hues and combinations. Value: Refers to how light or dark a color or tone appears. It helps create depth and contrast. Space: Refers to the area around, between, and within objects. It creates a sense of distance and depth. Texture: Describes how a surface looks or feels, such as rough, smooth, soft, or hard.',
+      'Analysis of the Elements — Line: The curved and flowing lines of the waves create movement, making the water appear powerful and unpredictable. Color: Different shades of blue contrast with the lighter sky, emphasizing the size and strength of the waves. Space: Mount Fuji appears small in the background while the enormous wave dominates the foreground. This creates depth and highlights the power of nature.',
     ],
     criticalAnalysis: {
-      heading: 'Elements as Emotion',
-      content: 'Van Gogh’s elements are not neutral: the restless line and tactile texture externalise his psychological state. Formal description and emotional reading are therefore inseparable in Post-Impressionism.',
-      culturalHistoricalContext: 'Painted from memory at the Saint-Rémy asylum window, 1889.',
+      heading: 'Critical Analysis',
+      content: 'Hokusai\'s use of these elements makes the artwork more than a simple picture of the ocean. The enormous wave compared to the small boats and distant mountains reminds viewers of how vulnerable humans can be against nature. The composition encourages people to appreciate both the beauty and danger of the natural world.',
     },
-    artworks: [{ ...ART.starryNight, calloutTags: ['Line — spirals', 'Shape — orbs', 'Color — blue/yellow', 'Value — glowing lights', 'Form — cypress', 'Texture — impasto', 'Space — overlap'] }],
-    citations: [R.arnheim, R.caslib, R.ortiz],
+    artworks: [{ ...P1.greatWave, calloutTags: ['Line — curved, flowing waves', 'Color — shades of blue vs. light sky', 'Space — small Fuji, huge wave'] }],
+    citations: [C1.greatWave],
   },
   {
     pageNumber: 9, partNumber: 1, slideLayout: 'design-breakdown',
-    title: 'Principles of Design in Action',
-    subtitle: 'Balance · Contrast · Emphasis · Movement · Pattern · Rhythm · Unity',
+    title: 'The Principles of Design: Creating Meaning Through Composition',
+    subtitle: 'Principles of Design (With Visual Application)',
     assignedMember: by('1B'),
     conciseExplanation: [
-      'Principles describe how elements are organised. Seurat’s Grande Jatte balances figures across the riverbank; light and shadow create contrast; the woman with the parasol provides emphasis; the eye moves diagonally along the shore; repeated parasols and hats form pattern and rhythm; and the pointillist technique unifies everything.',
-      'Principles explain why a composition feels calm, chaotic or harmonious.',
+      'Balance: The arrangement of visual elements to create stability in an artwork. Contrast: The use of differences in colors, shapes, sizes, or values to make elements stand out. Emphasis: Directs the viewer\'s attention to the most important part of an artwork. Movement: Guides the viewer\'s eyes throughout the artwork through lines, shapes, and arrangements. Rhythm: Uses repeated elements to create a sense of visual flow and pattern. Unity: Combines all the elements to create a complete and harmonious composition.',
+      'Analysis of the Principles — Balance: The bed, chairs, and other furniture are arranged throughout the room to create a sense of visual balance. Contrast: The combination of blue walls, yellow furniture, and reddish floor creates noticeable color differences. Emphasis: The large bed attracts attention because of its size and central placement. Movement: The angled floorboards and furniture edges guide the viewer\'s eyes around the room. Rhythm: The repeated shapes of the chairs, pictures, and furniture create visual patterns. Unity: The colors and arrangement of objects work together to create a connected and recognizable bedroom scene.',
     ],
     criticalAnalysis: {
-      heading: 'Order as Social Commentary',
-      content: 'The rigid, almost mechanical rhythm of Seurat’s figures can be read as a quiet critique of modern leisure — Parisians frozen in fashionable poses, together yet isolated.',
-      culturalHistoricalContext: 'Seurat applied Chevreul’s scientific colour theory, merging art and 19th-century science.',
+      heading: 'Critical Analysis',
+      content: 'Van Gogh uses the principles of design to turn an ordinary bedroom into an expressive artwork. The arrangement of furniture and combination of colors create a sense of order and harmony, while the unusual perspective makes the room visually interesting. These principles help communicate the artist\'s personal experience of his living space and show how composition can influence the mood and interpretation of an artwork.',
     },
-    artworks: [{ ...ART.grandeJatte, calloutTags: ['Balance', 'Contrast', 'Emphasis', 'Movement', 'Pattern', 'Rhythm', 'Unity'] }],
-    citations: [R.arnheim, R.caslib, R.gardner],
+    artworks: [{ ...P1.bedroom, calloutTags: ['Balance', 'Contrast', 'Emphasis', 'Movement', 'Rhythm', 'Unity'] }],
+    citations: [C1.bedroom],
   },
 
   // ======================= PART 2 =======================
@@ -418,85 +563,74 @@ const DRAFTS: Draft[] = [
   // ======================= PART 3 =======================
   {
     pageNumber: 16, partNumber: 3, slideLayout: 'comparative-split',
-    title: 'Chinese & Japanese Art',
-    subtitle: 'Scroll painting · Daoist harmony · Ukiyo-e · Wabi-sabi',
+    title: 'Chinese and Japanese Art: Nature, Spirituality, and Simplicity',
+    subtitle: 'Characteristics of Chinese and Japanese Art',
     assignedMember: by('3A'),
     conciseExplanation: [
-      'Chinese landscape painting (shanshui) expresses Daoist harmony between humanity and nature; brushwork is valued as an extension of the scholar’s character. Fan Kuan’s towering mountain reduces travellers to tiny figures.',
-      'Japanese art absorbed Chinese models but developed distinct aesthetics: ukiyo-e prints of the “floating world” and wabi-sabi, the beauty of imperfection and transience seen in Zen gardens and tea ceramics.',
+      'Chinese Art — Strong connection with nature, especially mountains, rivers, and landscapes. Influenced by Daoism, which emphasizes harmony and balance with nature. Buddhist beliefs also influenced religious paintings and sculptures. Common techniques include ink wash painting, calligraphy, and detailed brushwork.',
+      'Japanese Art — Ukiyo-e features everyday life, landscapes, actors, and beautiful scenery through woodblock prints. Zen Buddhism influenced simplicity, meditation, and appreciation of the present moment. Wabi-sabi appreciates natural imperfections, simplicity, and the beauty of aging. Nature is a common subject, often presented through clean lines and balanced compositions.',
+      'Representative Artworks — Travelers Among Mountains and Streams, Fan Kuan, Northern Song Dynasty, ca. 1000 CE (early 11th century). Hanging scroll, ink and light colors on silk. Under the Wave off Kanagawa (The Great Wave), Katsushika Hokusai, Edo period, ca. 1830–32. Woodblock print, ink and color on paper.',
     ],
-    criticalAnalysis: {
-      heading: 'Emptiness as Content',
-      content: 'Unlike Western perspective that fills space, East Asian art activates empty space — mist, silk, raked gravel — as a site of contemplation. Absence becomes meaningful.',
-      culturalHistoricalContext: 'Zen Buddhism, the tea ceremony and Daoist philosophy shaped this aesthetic.',
-    },
-    artworks: [ART.fanKuan, ART.ryoanji],
-    citations: [R.sullivan, R.mason, R.okakura],
+    criticalAnalysis: { heading: '', content: '' },
+    artworks: [P3.fanKuan, P3.greatWave],
+    citations: [C3.fanKuan, C3.greatWave, C3.lumen],
   },
   {
     pageNumber: 17, partNumber: 3, slideLayout: 'single-masterpiece',
-    title: 'Characteristics of Indian Art',
-    subtitle: 'Spiritual iconography · Hindu & Buddhist symbolism',
+    title: 'Indian Art: Devotion, Symbolism, and Sacred Form',
+    subtitle: 'Characteristics of Indian Art',
     assignedMember: by('3A'),
     conciseExplanation: [
-      'Indian art is deeply religious. Hindu, Buddhist and Jain traditions developed precise iconographic codes — mudras (hand gestures), asanas (postures) and attributes — so devotees could recognise deities instantly. Sculpture and temple architecture are conceived as sacred diagrams of the cosmos.',
-      'The Chola bronze Nataraja shows Shiva dancing within a ring of fire, trampling the dwarf of ignorance while his hands hold the drum of creation and the flame of destruction.',
+      'Much traditional Indian art serves religion, helping devotees connect with the divine through temples, sculptures, and paintings. Iconography works like a visual language: gods are recognized by their poses, number of arms, and the objects they hold. Mudras (hand gestures) carry meanings such as protection, teaching, or blessing. Temples are sacred spaces, decorated with carvings that tell stories from myths and epics. Art often expresses ideas about the cycle of creation, destruction, and renewal.',
+      'Representative Artwork — Shiva as Lord of the Dance (Shiva Nataraja), Chola period, Tamil Nadu, South India, ca. late 11th century CE. Copper alloy (bronze).',
     ],
     criticalAnalysis: {
-      heading: 'An Image to Be Worshipped',
-      content: 'In a museum we view Nataraja as sculpture; in a temple it is a living presence that is bathed, dressed and carried in procession. Context transforms the object’s meaning from aesthetic to sacred.',
-      culturalHistoricalContext: 'Chola-dynasty lost-wax casting (10th–11th c.) in Tamil Nadu reached unrivalled refinement.',
+      heading: 'Reading the Nataraja',
+      content: 'Shiva dances inside a ring of flames that represents the universe’s endless cycle of creation and destruction. His raised palm shows the abhaya mudra, meaning “do not fear.” One foot rests on a small figure symbolizing ignorance, and his flying hair shows the energy of the dance. Bronzes like this were made to be carried in temple processions, so they were part of living worship.',
     },
-    artworks: [ART.nataraja],
-    citations: [R.craven, R.gardner],
+    artworks: [P3.nataraja],
+    citations: [C3.nataraja, C3.khalid],
   },
   {
-    pageNumber: 18, partNumber: 3, slideLayout: 'timeline-context',
-    title: 'Comparative Asian Analysis',
-    subtitle: 'Selected Asian artworks & their cultural significance',
+    pageNumber: 18, partNumber: 3, slideLayout: 'comparative-split',
+    title: 'Two Views of Nature: Fan Kuan’s Mountains vs. Hokusai’s Wave',
+    subtitle: 'Comparative Analysis of Selected Asian Artworks',
     assignedMember: by('3A'),
     conciseExplanation: [
-      'Placing works side by side reveals shared Asian values — the sacred, cyclical time and harmony with nature — expressed through distinct forms: a Chinese handscroll read as a journey, a Javanese stupa ascended as a mandala, a Mughal tomb as paradise, and a Japanese print sold to urban commoners.',
+      'Medium — Fan Kuan: hand-painted ink on silk, mounted as a hanging scroll. Hokusai: woodblock print made by a team of artist, carver, and printer.',
+      'Visual Style — Fan Kuan: muted ink tones, tall vertical format, textured brushwork, a calm and monumental mood. Hokusai: bold blues, strong outlines, a sweeping diagonal curve, a dramatic and dynamic mood.',
+      'Role of Nature — Fan Kuan: a vast, permanent mountain makes people look tiny. Hokusai: a powerful wave threatens the boats, with Mount Fuji small in the distance.',
+      'Cultural and Historical Significance — Fan Kuan: a landmark of monumental Chinese landscape painting, tied to Daoist and Neo-Confucian ideas of cosmic order. Hokusai: a popular Edo-period ukiyo-e print made for a wide audience, now one of the most recognized images in world art.',
     ],
     criticalAnalysis: {
-      heading: 'Journey as a Shared Structure',
-      content: 'Scroll, stupa and garden all require the viewer to move through time. Asian art often privileges process and passage over a single fixed viewpoint.',
+      heading: 'Conclusion',
+      content: 'Both works show humans as small beside nature, but they feel very different. Fan Kuan’s scene is still and eternal, while Hokusai’s captures a single dramatic moment.',
     },
-    artworks: [ART.qingming, ART.borobudur, ART.tajMahal, ART.greatWave],
-    citations: [R.sullivan, R.craven, R.mason],
+    artworks: [
+      { ...P3.fanKuan, calloutTags: ['A · Fan Kuan, China, ca. 1000 CE'] },
+      { ...P3.greatWave, calloutTags: ['B · Hokusai, Japan, ca. 1830–32'] },
+    ],
+    citations: [C3.fanKuan, C3.greatWave, C3.lumen],
   },
   {
-    pageNumber: 19, partNumber: 3, slideLayout: 'heritage-spotlight',
-    title: 'Philippine Indigenous Art I',
-    subtitle: 'Textile & Weaving Traditions — T’nalak, Inabel, Yakan',
+    pageNumber: 19, partNumber: 3, slideLayout: 'craft-catalog',
+    title: 'Philippine Indigenous Art & Traditional Crafts',
+    subtitle: 'Weaving & Textile Arts',
     assignedMember: by('3B'),
-    conciseExplanation: [
-      'Weaving is among the archipelago’s most sophisticated art forms. The T’boli of Lake Sebu tie-dye abaca into T’nalak whose patterns arrive in dreams. Ilocano Inabel features protective binakol whirlwinds, while Yakan weavers of Basilan produce intensely coloured geometric cloth.',
-      'These textiles mark life passages — birth, marriage and death — and encode identity.',
-    ],
-    criticalAnalysis: {
-      heading: 'Beyond “Craft”',
-      content: 'Calling these textiles “crafts” underestimates their complexity. They are knowledge systems combining botany, mathematics, spirituality and memory, worthy of the same critical attention as painting.',
-      culturalHistoricalContext: 'Lang Dulay (T’nalak) and Magdalena Gamayo (Inabel) are GAMABA National Living Treasures.',
-    },
-    artworks: [ART.tnalak, ART.inabel, ART.yakan],
-    citations: [R.ccp, R.gamaba, R.ncca],
+    conciseExplanation: ['Philippine Indigenous Art & Traditional Indigenous Weaving and Textile crafts.'],
+    criticalAnalysis: { heading: '', content: '' },
+    artworks: [P3.tnalak, P3.inabel, P3.yakan, P3.inaul, P3.pisSyabit, P3.dagmay],
+    citations: [C3.tnalak, C3.inabel, C3.yakan, C3.inaul, C3.pisSyabit, C3.dagmay],
   },
   {
-    pageNumber: 20, partNumber: 3, slideLayout: 'heritage-spotlight',
-    title: 'Philippine Indigenous Art II',
-    subtitle: 'Pottery, Carving & Metalwork — Manunggul Jar, Bulul, Okir',
+    pageNumber: 20, partNumber: 3, slideLayout: 'craft-catalog',
+    title: 'Philippine Indigenous Art & Traditional Crafts',
+    subtitle: 'Pottery, Carving & Metalwork',
     assignedMember: by('3B'),
-    conciseExplanation: [
-      'The Manunggul Jar from Palawan’s Tabon Caves shows two souls rowing to the afterlife, evidence of complex beliefs nearly 3,000 years ago. Ifugao bulul carvings guard rice granaries, and Maranao okir fills houses and brassware with flowing fern and serpent motifs.',
-    ],
-    criticalAnalysis: {
-      heading: 'Function and Faith Fused',
-      content: 'Each object is simultaneously useful and sacred: a burial jar, a granary guardian, a royal house. Pre-colonial Filipino art did not separate the aesthetic from the everyday.',
-      culturalHistoricalContext: 'Okir’s curvilinear style reflects Islamic aversion to figurative images, channelling creativity into ornament.',
-    },
-    artworks: [ART.manunggul, ART.bulul, ART.okir],
-    citations: [R.fox, R.ccp, R.guillermo],
+    conciseExplanation: ['Philippine Indigenous Art & Traditional Crafts — Manunggul Jar, Bulul carving, Okir/Sarimanok and Lingling-o.'],
+    criticalAnalysis: { heading: '', content: '' },
+    artworks: [P3.manunggul, P3.bulul, P3.okir, P3.linglingo],
+    citations: [C3.manunggul, C3.bulul, C3.sarimanok, C3.linglingo],
   },
   {
     pageNumber: 21, partNumber: 3, slideLayout: 'comparative-split',
@@ -669,54 +803,50 @@ const DRAFTS: Draft[] = [
   },
   {
     pageNumber: 31, partNumber: 5, slideLayout: 'design-breakdown',
-    title: 'Formal Critique I',
-    subtitle: 'Elements & Principles in Contemporary Masterworks',
+    title: 'Space and Illusion in Arkipelago',
+    subtitle: 'Elements & Principles of Design in Contemporary Art (Critique 1)',
     assignedMember: by('5B'),
     conciseExplanation: [
-      'BenCab’s Sabel uses fluid, calligraphic line and a muted sepia palette; the wrapped figure creates strong shape against empty space. Emphasis falls on the hidden face, producing tension, while repeated drapery folds create rhythm.',
-      'Formal analysis shows how a contemporary artist still relies on classical design principles.',
+      'Selected Contemporary Artwork — Arkipelago, Mark Justiniani, 2019, Mixed media installation (mirrors, glass, metal frames, LED lights, found objects).',
+      'Justiniani uses the element of space and the principle of repetition to create a staggering optical illusion. By placing facing mirrors beneath glass floors, he visually extends shallow spaces into bottomless, infinite abysses filled with illuminated, everyday Filipino objects.',
     ],
     criticalAnalysis: {
-      heading: 'Form Carries the Message',
-      content: 'The veiling drapery, an element of form, becomes the content: invisibility of the urban poor. Formal choices are political choices.',
-      culturalHistoricalContext: 'BenCab was named National Artist for Visual Arts in 2006.',
+      heading: 'Formal Analysis',
+      content: 'This endless repetition of forms reinforces a heavy psychological and conceptual impact and creates this nauseating feeling as you look at it, making the viewer reflect on what is real and illusion.',
     },
-    artworks: [ART.bencab],
-    citations: [R.guillermo, R.arnheim, R.caslib],
+    artworks: [{ ...P5.arkipelago, calloutTags: ['Space', 'Repetition', 'Illusion', 'Mirrors & LED lights'] }],
+    citations: [C5.arkipelago],
   },
   {
-    pageNumber: 32, partNumber: 5, slideLayout: 'comparative-split',
-    title: 'Formal Critique II',
-    subtitle: 'Space, Scale & Mixed Media Innovation',
+    pageNumber: 32, partNumber: 5, slideLayout: 'design-breakdown',
+    title: 'Space and Scale in Mebuyan’s Colony',
+    subtitle: 'Elements & Principles of Design in Contemporary Art (Critique 2)',
     assignedMember: by('5B'),
     conciseExplanation: [
-      'Pacita Abad’s trapunto works stitch, pad and paint canvas with beads and mirrors, creating tactile relief. The Aquilizans use massive scale — thousands of small objects — so viewers physically walk into the work.',
-      'Space and scale shift the viewer from observer to participant.',
+      'Selected Contemporary Artwork — Mebuyan\'s Colony, Leeroy New, 2022, Mixed media installation (bamboo, recycled plastic, cable ties).',
+      'Leeroy New manipulates scale and space by constructing massive, biomorphic pods that viewers can physically enter. He creates a striking visual contrast in texture by weaving together organic, natural bamboo with synthetic, discarded plastic materials.',
     ],
     criticalAnalysis: {
-      heading: 'The Body of the Viewer',
-      content: 'Mixed media and immersive scale engage touch, movement and memory. These works argue that appreciation is embodied, not only visual.',
-      culturalHistoricalContext: 'Abad’s 55-metre painted Singapore footbridge (2004) extended her practice into public space.',
+      heading: 'Formal Analysis',
+      content: 'The unusual textures and scale of the artwork make the audience have to interact with it to fully experience it, bringing attention to the connection between Philippine mythology and modern environmental decay.',
     },
-    artworks: [ART.pacita, ART.aquilizan],
-    citations: [R.smith, R.bourriaud, R.bishop],
+    artworks: [{ ...P5.mebuyan, calloutTags: ['Space', 'Scale', 'Texture contrast', 'Bamboo & recycled plastic'] }],
+    citations: [C5.mebuyan],
   },
   {
     pageNumber: 33, partNumber: 5, slideLayout: 'single-masterpiece',
-    title: 'Art as Social Commentary',
-    subtitle: 'Addressing social issues & societal change',
+    title: 'Street Art as the Voice of the Marginalized',
+    subtitle: 'Art as Social Commentary & Catalyst for Change',
     assignedMember: by('5B'),
     conciseExplanation: [
-      'From Goya to Filipino social realists of the martial law era, artists have exposed injustice. Today muralists, digital artists and community collectives address poverty, climate change, indigenous rights and disinformation.',
-      'Art can raise awareness, build solidarity and imagine alternatives — completing our journey from foundations to the present.',
+      'Featured Artwork — Lupang Ninuno (Mural advocating for Lumad rights), Archie Oclos, 2018.',
     ],
     criticalAnalysis: {
-      heading: 'Art That Acts',
-      content: 'Social commentary art measures success not by beauty alone but by its power to move people to reflection and action. It reminds us that appreciation carries responsibility.',
-      culturalHistoricalContext: 'Kaisahan (1976) pioneered Philippine social realism during martial law.',
+      heading: 'Critical Analysis',
+      content: 'Modern art in the Philippines often takes to the streets in order to address current social and political issues. By bringing art into public spaces, artists are making their work accessible to everyone and are drawing attention to issues such as human rights abuse, fighting for indigenous communities and environmental destruction. This form of visual activism bypasses censorship, provokes public discourse, and serves as a powerful catalyst for awareness and resistance.',
     },
-    artworks: [ART.streetArt],
-    citations: [R.guillermo, R.bishop, R.berger],
+    artworks: [P5.lupang],
+    citations: [C5.lupang],
   },
 
   // ======================= BACK MATTER =======================

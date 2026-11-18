@@ -13,6 +13,7 @@ export type SlideLayout =
   | 'design-breakdown'
   | 'timeline-context'
   | 'heritage-spotlight'
+  | 'craft-catalog'
   // Back Matter layouts
   | 'references'
   | 'disclosure'
@@ -31,6 +32,8 @@ export interface Artwork {
   caption: string;
   sourceUrl: string;
   calloutTags?: string[];
+  /** Labelled detail blocks (Featured / Cultural Context / Significance) shown on craft-catalog cards. */
+  notes?: { label: string; text: string }[];
 }
 
 export interface CriticalAnalysis {
