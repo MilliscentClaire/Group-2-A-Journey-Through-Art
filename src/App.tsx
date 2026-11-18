@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, FileText, Grid3x3, Menu, Moon, Printer, Sparkles, Sun } from 'lucide-react';
 import type { Artwork, PortfolioSlide } from './types';
-import { CORE_PAGE_COUNT, PARTS, SLIDES } from './data/slidesData';
+import { BACK_MATTER_COUNT, CORE_PAGE_COUNT, PARTS, SLIDES } from './data/slidesData';
 import { Slide } from './components/Slide';
 import { ChapterDrawer, CitationDrawer, JumpModal, Lightbox, ScaledStage } from './components/Overlays';
 import { PdfHub } from './components/PdfHub';
@@ -154,7 +154,7 @@ export default function App() {
       {mode === 'print' && (
         <div className="flex-1 min-h-0 overflow-auto thin-scroll print-scroll">
           <div className="no-print sticky top-0 z-30 flex flex-wrap items-center justify-center gap-4 py-3 px-4 bg-wall/90 backdrop-blur border-b border-line">
-            <span className="font-mono text-[10.5px] text-muted">{SLIDES.length} pages · {CORE_PAGE_COUNT} core + 3 back matter · 1122×631 (16:9)</span>
+            <span className="font-mono text-[10.5px] text-muted">{SLIDES.length} pages · {CORE_PAGE_COUNT} core + {BACK_MATTER_COUNT} back matter · 1122×631 (16:9)</span>
             <button id="export-print-btn" onClick={() => window.print()} className="flex items-center gap-2 bg-gold text-[#0d0d0f] px-5 py-2 text-[13px] font-semibold hover:brightness-110">
               <Printer size={15} /> 🖨️ Export All {SLIDES.length} Pages to PDF
             </button>

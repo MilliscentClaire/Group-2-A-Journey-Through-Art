@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, Download, FileSpreadsheet, FileText, Printer } from 'lucide-react';
-import { COURSE, GROUP_MEMBERS } from '../data/slidesData';
+import { BACK_MATTER_COUNT, COURSE, GROUP_MEMBERS } from '../data/slidesData';
 
 function downloadMatrix() {
   const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
@@ -27,7 +27,7 @@ export function PdfHub({ onGoPrint }: { onGoPrint: () => void }) {
           <div>
             <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-gold">Mode 2 · PDF Archive</div>
             <h2 className="font-serif text-[44px] leading-none mt-2">Embedded PDF & Download Hub</h2>
-            <p className="text-muted text-[13px] mt-2 max-w-[620px]">For offline review and Google Classroom verification. The PDF mirrors the 33 core pages plus 3 Back Matter pages.</p>
+            <p className="text-muted text-[13px] mt-2 max-w-[620px]">For offline review and Google Classroom verification. The PDF mirrors the 33 core pages plus {BACK_MATTER_COUNT} Back Matter pages.</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <a id="download-pdf-btn" href={COURSE.pdfPath} download className={`flex items-center gap-2 px-5 py-3 text-[13px] font-semibold ${status === 'ok' ? 'bg-gold text-[#0d0d0f] hover:brightness-110' : 'bg-gold/30 text-ink/60 pointer-events-none'}`}>

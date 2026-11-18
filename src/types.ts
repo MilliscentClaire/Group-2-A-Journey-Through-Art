@@ -1,5 +1,5 @@
 /** Core pages are numbered 1–33. Back Matter uses string IDs (excluded from the 20–40 page count). */
-export type PageId = number | 'REF-1' | 'REF-2' | 'ROLES';
+export type PageId = number | string;
 
 /** 0 = Front Matter, 1–5 = Required Parts, 6 = Back Matter & PDF Archive */
 export type PartNumber = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -42,6 +42,14 @@ export interface CriticalAnalysis {
   culturalHistoricalContext?: string;
 }
 
+export interface RefSlice {
+  items: string[];
+  startIndex: number;
+  showCredits: boolean;
+  pageIndex: number;
+  totalRefPages: number;
+}
+
 export interface PortfolioSlide {
   pageNumber: PageId;
   partNumber: PartNumber;
@@ -54,6 +62,7 @@ export interface PortfolioSlide {
   criticalAnalysis: CriticalAnalysis;
   artworks: Artwork[];
   citations: string[];
+  refSlice?: RefSlice;
 }
 
 export interface GroupMember {

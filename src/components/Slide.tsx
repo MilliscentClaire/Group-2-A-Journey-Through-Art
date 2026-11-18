@@ -1,8 +1,8 @@
-import { useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { ArrowRight, BookOpen, CheckCircle2, FileText, Landmark } from 'lucide-react';
 import type { Artwork, PortfolioSlide } from '../types';
 import { ArtFrame } from './ArtFrame';
-import { COURSE, GROUP_MEMBERS, PARTS, RUBRIC_CHECKLIST, SLIDES, CORE_PAGE_COUNT, compileImageCredits, compileReferences } from '../data/slidesData';
+import { BACK_MATTER_COUNT, COURSE, GROUP_MEMBERS, PARTS, RUBRIC_CHECKLIST, SLIDES, CORE_PAGE_COUNT, compileImageCredits, compileReferences } from '../data/slidesData';
 import { animateCardHover } from '../utils/animations';
 
 export interface SlideProps {
@@ -64,6 +64,64 @@ function Analysis({ s, compact }: { s: PortfolioSlide; compact?: boolean }) {
   );
 }
 
+function FitColumn({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const outerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const outer = outerRef.current;
+    const inner = innerRef.current;
+    if (!outer || !inner) return;
+
+    const fit = () => {
+      inner.style.transform = '';
+      inner.style.width = '100%';
+      inner.style.minHeight = '0px';
+      const availH = outer.clientHeight;
+      const naturalH = inner.offsetHeight;
+      if (availH <= 0) {
+        inner.style.minHeight = '100%';
+        return;
+      }
+      if (naturalH <= availH) {
+        inner.style.minHeight = '100%';
+        return;
+      }
+      let s = Math.max(0.68, Math.sqrt(availH / naturalH));
+      inner.style.width = `${100 / s}%`;
+      const h1 = inner.offsetHeight;
+      if (h1 * s > availH) {
+        s = Math.max(0.62, (availH - 2) / h1);
+        inner.style.width = `${100 / s}%`;
+        const h2 = inner.offsetHeight;
+        if (h2 * s > availH) {
+          s = Math.max(0.6, (availH - 2) / h2);
+          inner.style.width = `${100 / s}%`;
+        }
+      }
+      inner.style.minHeight = `${Math.floor(availH / s)}px`;
+      inner.style.transformOrigin = 'top left';
+      inner.style.transform = `scale(${s})`;
+    };
+
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(outer);
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(fit).catch(() => {});
+    }
+    return () => ro.disconnect();
+  }, [children]);
+
+  return (
+    <div ref={outerRef} className="relative flex-1 h-full min-h-0 min-w-0 overflow-hidden">
+      <div ref={innerRef} className={`flex flex-col ${className}`}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- layouts ---------------- */
 function SingleMasterpiece({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => void }) {
   return (
@@ -71,11 +129,11 @@ function SingleMasterpiece({ s, open }: { s: PortfolioSlide; open: (a: Artwork) 
       <div className="relative spotlight flex min-h-0">
         <ArtFrame art={s.artworks[0]} onOpen={open} className="flex-1" />
       </div>
-      <div className="flex flex-col gap-4 min-h-0">
+      <FitColumn className="gap-4">
         <Title s={s} />
         <Paras s={s} />
         <div className="mt-auto"><Analysis s={s} /></div>
-      </div>
+      </FitColumn>
     </div>
   );
 }
@@ -83,7 +141,7 @@ function SingleMasterpiece({ s, open }: { s: PortfolioSlide; open: (a: Artwork) 
 function ComparativeSplit({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => void }) {
   const [a, b] = s.artworks;
   return (
-    <div className="grid grid-cols-[1fr_1fr_1.25fr] gap-6 h-full">
+    <div className="grid grid-cols-[1fr_1fr_1.32fr] gap-6 h-full">
       {[a, b].map((art, i) =>
         art ? (
           <div key={art.id} className="flex flex-col min-h-0 gap-2">
@@ -98,11 +156,11 @@ function ComparativeSplit({ s, open }: { s: PortfolioSlide; open: (a: Artwork) =
           </div>
         ) : <div key={i} />,
       )}
-      <div className="flex flex-col gap-3 min-h-0">
+      <FitColumn className="gap-3">
         <Title s={s} size={30} />
         <Paras s={s} size={11.4} />
         <div className="mt-auto"><Analysis s={s} compact /></div>
-      </div>
+      </FitColumn>
     </div>
   );
 }
@@ -112,7 +170,7 @@ function DesignBreakdown({ s, open }: { s: PortfolioSlide; open: (a: Artwork) =>
   return (
     <div className="grid grid-cols-[440px_1fr] gap-9 h-full">
       <div className="spotlight flex min-h-0"><ArtFrame art={art} onOpen={open} className="flex-1" /></div>
-      <div className="flex flex-col gap-3 min-h-0">
+      <FitColumn className="gap-3">
         <Title s={s} size={32} />
         <Paras s={s} size={11.6} />
         {art.calloutTags && (
@@ -126,7 +184,7 @@ function DesignBreakdown({ s, open }: { s: PortfolioSlide; open: (a: Artwork) =>
           </div>
         )}
         <div className="mt-auto"><Analysis s={s} compact /></div>
-      </div>
+      </FitColumn>
     </div>
   );
 }
@@ -161,12 +219,12 @@ function HeritageSpotlight({ s, open }: { s: PortfolioSlide; open: (a: Artwork) 
   const arts = s.artworks;
   return (
     <div className="grid grid-cols-[1fr_1.08fr] gap-9 h-full">
-      <div className="flex flex-col gap-3.5 min-h-0">
+      <FitColumn className="gap-3.5">
         <div data-anim className="okir-band h-1.5 w-28" />
         <Title s={s} size={32} />
         <Paras s={s} size={11.8} />
         <div className="mt-auto"><Analysis s={s} /></div>
-      </div>
+      </FitColumn>
       <div className={`grid gap-4 min-h-0 ${arts.length >= 3 ? 'grid-cols-2 grid-rows-2' : arts.length === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
         {arts.map((a, i) => (
           <ArtFrame key={a.id} art={a} onOpen={open} variant="terra" fit="cover" className={arts.length >= 3 && i === 0 ? 'row-span-2' : ''} />
@@ -192,7 +250,7 @@ function CraftCatalog({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => vo
             <div className="w-[34%] shrink-0 flex flex-col min-h-0">
               <ArtFrame art={a} onOpen={open} variant="terra" fit="cover" showPlaque={false} className="flex-1" />
             </div>
-            <div className="min-w-0 flex flex-col gap-1 overflow-hidden">
+            <FitColumn className="gap-1">
               <div className="font-serif text-[14px] font-semibold leading-tight text-ink">{a.title}</div>
               <div className="font-mono text-[7.5px] tracking-wider uppercase text-terra truncate">{a.artist}</div>
               {a.notes?.map((n) => (
@@ -200,7 +258,7 @@ function CraftCatalog({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => vo
                   <span className="font-mono text-[7px] tracking-widest uppercase text-terra">{n.label} — </span>{n.text}
                 </p>
               ))}
-            </div>
+            </FitColumn>
           </div>
         ))}
       </div>
@@ -211,7 +269,7 @@ function CraftCatalog({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => vo
 function Intro({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => void }) {
   return (
     <div className="grid grid-cols-[1fr_330px] gap-10 h-full">
-      <div className="flex flex-col gap-4 min-h-0">
+      <FitColumn className="gap-4">
         <Title s={s} size={42} />
         <Paras s={s} size={12.2} />
         <div className="mt-auto grid grid-cols-[1fr_auto] gap-6 items-end">
@@ -221,7 +279,7 @@ function Intro({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => void }) {
             <div className="font-mono text-[8.5px] tracking-widest uppercase text-muted mt-1">Lead Curator · Group 2</div>
           </div>
         </div>
-      </div>
+      </FitColumn>
       <div className="spotlight flex min-h-0"><ArtFrame art={s.artworks[0]} onOpen={open} className="flex-1" /></div>
     </div>
   );
@@ -313,7 +371,7 @@ function Toc({ slide: s, onNavigate }: SlideProps) {
         <div data-anim className="plaque-border p-4 flex flex-col justify-center spotlight">
           <BookOpen className="text-gold" size={20} />
           <div className="font-serif text-[30px] leading-none mt-2 text-ink">{CORE_PAGE_COUNT} <span className="text-[16px] italic text-muted">core pages</span></div>
-          <div className="font-mono text-[9px] text-muted mt-1">+ 3 Back Matter pages (excluded)</div>
+          <div className="font-mono text-[9px] text-muted mt-1">+ {BACK_MATTER_COUNT} Back Matter pages (excluded)</div>
         </div>
       </div>
     </div>
@@ -321,38 +379,58 @@ function Toc({ slide: s, onNavigate }: SlideProps) {
 }
 
 function References({ slide: s }: SlideProps) {
-  const refs = compileReferences();
-  const credits = compileImageCredits();
+  const slice = s.refSlice;
+  const items = slice?.items ?? compileReferences();
+  const start = (slice?.startIndex ?? 0) + 1;
+  const showCredits = slice?.showCredits ?? true;
+  const credits = showCredits ? compileImageCredits() : [];
+  const colLen = Math.ceil(items.length / 3);
+  const cols = [0, 1, 2].map((c) => ({
+    offset: c * colLen,
+    list: items.slice(c * colLen, (c + 1) * colLen),
+  }));
+
   return (
-    <div className="flex flex-col h-full gap-3">
+    <FitColumn className="gap-2.5">
       <Title s={s} size={28} />
-      <ol data-anim className="flex-1 min-h-0 text-[8.1px] leading-[1.42] text-ink/85" style={{ columns: 3, columnGap: 22 }}>
-        {refs.map((r) => (
-          <li key={r} className="break-inside-avoid mb-1 pl-3 -indent-3">{r}</li>
-        ))}
-      </ol>
-      <div data-anim className="border-t border-line pt-2">
-        <div className="font-mono text-[8px] tracking-[0.22em] uppercase text-gold mb-1">Image Credits</div>
-        <p className="text-[7.3px] leading-[1.45] text-muted">
-          {credits.map((c) => `${c.title} — ${c.artist} (${c.yearOrPeriod})${c.imageUrl ? ', Wikimedia Commons, public domain' : ', group photo/scan'}`).join('  ·  ')}
-        </p>
-      </div>
-    </div>
+      {items.length > 0 && (
+        <div data-anim className="grid grid-cols-3 gap-x-6 items-start">
+          {cols.map((col, ci) => (
+            <ol key={ci} start={start + col.offset} className="min-w-0 space-y-1.5 text-[8.1px] leading-[1.42] text-ink/85 list-none m-0 p-0">
+              {col.list.map((r, i) => (
+                <li key={r} className="min-w-0 break-words [overflow-wrap:anywhere] pl-4 -indent-4">
+                  <span className="font-mono text-[7.5px] text-gold mr-1">{start + col.offset + i}.</span>
+                  {r}
+                </li>
+              ))}
+            </ol>
+          ))}
+        </div>
+      )}
+      {showCredits && (
+        <div data-anim className="mt-auto border-t border-line pt-2">
+          <div className="font-mono text-[8px] tracking-[0.22em] uppercase text-gold mb-1">Image Credits</div>
+          <p className="text-[7.3px] leading-[1.45] text-muted break-words [overflow-wrap:anywhere]">
+            {credits.map((c) => `${c.title} — ${c.artist} (${c.yearOrPeriod})${c.imageUrl ? ', Wikimedia Commons, public domain' : ', group photo/scan'}`).join('  ·  ')}
+          </p>
+        </div>
+      )}
+    </FitColumn>
   );
 }
 
 function Disclosure({ slide: s }: SlideProps) {
   return (
     <div className="grid grid-cols-[1.1fr_1fr] gap-10 h-full">
-      <div className="flex flex-col gap-4">
+      <FitColumn className="gap-4">
         <Title s={s} size={32} />
         <Paras s={s} size={12} />
         <div data-anim className="plaque-border p-3 mt-auto">
           <div className="font-mono text-[8.5px] tracking-[0.22em] uppercase text-gold">Signed</div>
           <div className="font-serif italic text-[18px] text-ink">Group 2 — {GROUP_MEMBERS[0].name}, Leader</div>
         </div>
-      </div>
-      <div className="flex flex-col gap-2">
+      </FitColumn>
+      <FitColumn className="gap-2">
         <Eyebrow>Rubric Compliance Checklist</Eyebrow>
         {RUBRIC_CHECKLIST.map((r) => (
           <div data-anim key={r} className="flex items-start gap-2.5 plaque-border px-3 py-2 bg-card/50">
@@ -360,14 +438,14 @@ function Disclosure({ slide: s }: SlideProps) {
             <span className="text-[11.5px] text-ink/90 leading-snug">{r}</span>
           </div>
         ))}
-      </div>
+      </FitColumn>
     </div>
   );
 }
 
 function Roles({ slide: s }: SlideProps) {
   return (
-    <div className="flex flex-col h-full gap-3">
+    <FitColumn className="gap-3">
       <Title s={s} size={30} />
       <table data-anim className="w-full text-left border-collapse">
         <thead>
@@ -393,7 +471,7 @@ function Roles({ slide: s }: SlideProps) {
           ))}
         </tbody>
       </table>
-    </div>
+    </FitColumn>
   );
 }
 

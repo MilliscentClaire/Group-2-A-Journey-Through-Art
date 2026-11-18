@@ -313,11 +313,11 @@ const C5 = {
 };
 
 /* ---------------------------------------------------------------------
- * 5. THE 33 CORE PAGES + 3 BACK MATTER PAGES
+ * 5. THE 33 CORE PAGES + BACK MATTER PAGES
  * ------------------------------------------------------------------- */
 type Draft = Omit<PortfolioSlide, 'partTitle'>;
 
-const DRAFTS: Draft[] = [
+const CORE_DRAFTS: Draft[] = [
   // ======================= FRONT MATTER =======================
   {
     pageNumber: 1, partNumber: 0, slideLayout: 'cover',
@@ -849,19 +849,64 @@ const DRAFTS: Draft[] = [
     citations: [C5.lupang],
   },
 
-  // ======================= BACK MATTER =======================
-  {
-    pageNumber: 'REF-1', partNumber: 6, slideLayout: 'references',
-    title: 'References & Image Credits',
-    subtitle: 'Master Reference List (APA 7th) — compiled automatically from all slides',
+];
+
+// ======================= BACK MATTER (auto-paginated) =======================
+const REFS_PER_PAGE = 18;
+const ALL_REFERENCES = Array.from(
+  new Set([...CORE_DRAFTS.flatMap((s) => s.citations), R.wikimedia, R.nochlin]),
+).sort((a, b) => a.localeCompare(b));
+
+const refChunks: { items: string[]; startIndex: number; showCredits: boolean }[] = [];
+for (let i = 0; i < ALL_REFERENCES.length; i += REFS_PER_PAGE) {
+  refChunks.push({ items: ALL_REFERENCES.slice(i, i + REFS_PER_PAGE), startIndex: i, showCredits: false });
+}
+if (refChunks.length === 0) {
+  refChunks.push({ items: [], startIndex: 0, showCredits: true });
+} else if (refChunks[refChunks.length - 1].items.length <= 12) {
+  refChunks[refChunks.length - 1].showCredits = true;
+} else {
+  refChunks.push({ items: [], startIndex: ALL_REFERENCES.length, showCredits: true });
+}
+
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+const refSlides: Draft[] = refChunks.map((chunk, idx) => {
+  const totalRefPages = refChunks.length;
+  const labelNum = ROMAN[idx] ?? String(idx + 1);
+  return {
+    pageNumber: `REF-${idx + 1}`,
+    partNumber: 6,
+    slideLayout: 'references',
+    title: chunk.showCredits
+      ? chunk.items.length === 0
+        ? 'Image Credits'
+        : 'References & Image Credits'
+      : `Master References (${labelNum})`,
+    subtitle: `Master Reference List (APA 7th) — Page ${idx + 1} of ${totalRefPages}`,
     assignedMember: by('L'),
     conciseExplanation: [],
     criticalAnalysis: { heading: 'Note', content: 'Back Matter — excluded from the 20–40 page count.' },
     artworks: [],
-    citations: [R.wikimedia, R.nochlin],
-  },
+    citations: idx === 0 ? [R.wikimedia, R.nochlin] : [],
+    refSlice: {
+      items: chunk.items,
+      startIndex: chunk.startIndex,
+      showCredits: chunk.showCredits,
+      pageIndex: idx,
+      totalRefPages,
+    },
+  };
+});
+
+const disclosureId = `REF-${refSlides.length + 1}`;
+PARTS[6].range = `REF-1–${disclosureId} · ROLES`;
+GROUP_MEMBERS[0].pages = `1–3, REF-1–${disclosureId}, ROLES`;
+
+const DRAFTS: Draft[] = [
+  ...CORE_DRAFTS,
+  ...refSlides,
   {
-    pageNumber: 'REF-2', partNumber: 6, slideLayout: 'disclosure',
+    pageNumber: disclosureId, partNumber: 6, slideLayout: 'disclosure',
     title: 'Originality & AI Use Disclosure',
     subtitle: 'Academic integrity statement and rubric compliance checklist',
     assignedMember: by('L'),
@@ -896,6 +941,7 @@ export const SLIDES: PortfolioSlide[] = DRAFTS.map((d) => ({
 }));
 
 export const CORE_PAGE_COUNT = SLIDES.filter((s) => typeof s.pageNumber === 'number').length;
+export const BACK_MATTER_COUNT = SLIDES.length - CORE_PAGE_COUNT;
 
 /** De-duplicated, alphabetised master reference list. */
 export function compileReferences(): string[] {
