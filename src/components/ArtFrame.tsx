@@ -1,21 +1,53 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Frame, Maximize2 } from 'lucide-react';
 import type { Artwork } from '../types';
 
 /** Tries local /public file → remote URL → elegant museum placeholder. */
-export function ArtImage({ art, fit = 'contain', className = '' }: { art: Artwork; fit?: 'contain' | 'cover'; className?: string }) {
-  const sources = useMemo(() => [art.localImagePath, art.imageUrl].filter((s): s is string => !!s), [art.localImagePath, art.imageUrl]);
+export function ArtImage({
+  art,
+  fit = 'contain',
+  className = '',
+  onSize,
+}: {
+  art: Artwork;
+  fit?: 'contain' | 'cover';
+  className?: string;
+  onSize?: (w: number, h: number) => void;
+}) {
+  const sources = useMemo(
+    () => [art.localImagePath, art.imageUrl].filter((s): s is string => !!s),
+    [art.localImagePath, art.imageUrl],
+  );
   const [idx, setIdx] = useState(0);
 
-  if (idx >= sources.length) return <MuseumPlaceholder art={art} />;
+  const imgRef = useCallback(
+    (el: HTMLImageElement | null) => {
+      if (el && el.complete && el.naturalWidth > 0 && el.naturalHeight > 0) {
+        onSize?.(el.naturalWidth, el.naturalHeight);
+      }
+    },
+    [onSize],
+  );
+
+  if (idx >= sources.length) {
+    return <MuseumPlaceholder art={art} />;
+  }
   return (
     <img
+      ref={imgRef}
       src={sources[idx]}
       alt={`${art.title} by ${art.artist}`}
       loading="eager"
       decoding="async"
       referrerPolicy="no-referrer"
-      onError={() => setIdx((i) => i + 1)}
+      onLoad={(e) => onSize?.(e.currentTarget.naturalWidth, e.currentTarget.naturalHeight)}
+      onError={() => {
+        setIdx((i) => {
+          const next = i + 1;
+          if (next >= sources.length) onSize?.(0, 0);
+          return next;
+        });
+      }}
       className={`w-full h-full ${fit === 'cover' ? 'object-cover' : 'object-contain'} ${className}`}
     />
   );
@@ -45,10 +77,55 @@ interface FrameProps {
 /** Museum frame: mat + shutter + SVG golden line (animated via anime.js) + plaque. */
 export function ArtFrame({ art, onOpen, variant = 'gold', showPlaque = true, fit = 'contain', label, className = '' }: FrameProps) {
   const stroke = variant === 'terra' ? '#b85d3b' : '#c5a059';
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [stage, setStage] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
+  const [ratio, setRatio] = useState<number | null>(null);
+
+  const handleSize = useCallback((w: number, h: number) => {
+    setRatio(w > 0 && h > 0 ? w / h : null);
+  }, []);
+
+  useLayoutEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const update = () => setStage({ w: el.clientWidth, h: el.clientHeight });
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const fitted = useMemo(() => {
+    if (fit !== 'contain' || !ratio || stage.w <= 0 || stage.h <= 0) return null;
+    const plaqueH = showPlaque ? 38 : 0;
+    const maxW = Math.max(0, stage.w);
+    const maxH = Math.max(0, stage.h - plaqueH);
+    const availImgW = Math.max(1, maxW - 16);
+    const availImgH = Math.max(1, maxH - 16);
+    let imgW: number;
+    let imgH: number;
+    if (availImgW / availImgH > ratio) {
+      imgH = availImgH;
+      imgW = availImgH * ratio;
+    } else {
+      imgW = availImgW;
+      imgH = availImgW / ratio;
+    }
+    return {
+      w: Math.min(maxW, Math.round(imgW + 16)),
+      h: Math.min(maxH, Math.round(imgH + 16)),
+    };
+  }, [fit, ratio, stage.w, stage.h, showPlaque]);
+
   return (
-    <figure data-anim className={`flex flex-col min-h-0 m-0 ${className}`}>
+    <figure
+      ref={stageRef}
+      data-anim
+      className={`flex flex-col min-h-0 min-w-0 m-0 ${fitted ? 'items-center justify-center' : ''} ${className}`}
+    >
       <div
-        className={`frame-mat ${variant === 'terra' ? 'frame-terra' : ''} relative flex-1 min-h-0 group cursor-zoom-in`}
+        style={fitted ? { width: fitted.w, height: fitted.h } : undefined}
+        className={`frame-mat ${variant === 'terra' ? 'frame-terra' : ''} relative ${fitted ? 'shrink-0' : 'flex-1 min-h-0 w-full'} group cursor-zoom-in`}
         onClick={() => onOpen?.(art)}
         role="button"
         tabIndex={0}
@@ -57,7 +134,7 @@ export function ArtFrame({ art, onOpen, variant = 'gold', showPlaque = true, fit
       >
         <div className="absolute inset-[8px] overflow-hidden bg-black/30">
           <div data-frame-img className="w-full h-full">
-            <ArtImage key={art.id + art.localImagePath} art={art} fit={fit} />
+            <ArtImage key={art.id + art.localImagePath} art={art} fit={fitted ? 'cover' : fit} onSize={handleSize} />
           </div>
           <div data-shutter className="absolute inset-0 bg-wall2 origin-top" style={{ transform: 'scaleY(0)' }} />
         </div>
@@ -70,7 +147,7 @@ export function ArtFrame({ art, onOpen, variant = 'gold', showPlaque = true, fit
         </span>
       </div>
       {showPlaque && (
-        <figcaption className="pt-2 leading-tight">
+        <figcaption style={fitted ? { width: fitted.w } : undefined} className="pt-2 leading-tight shrink-0 max-w-full">
           <div className="font-serif italic text-[13px] text-ink truncate">{art.title}</div>
           <div className="font-mono text-[8.5px] tracking-wider uppercase text-muted truncate">
             {art.artist} · {art.yearOrPeriod}
