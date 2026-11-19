@@ -33,9 +33,9 @@ export const GROUP_MEMBERS: GroupMember[] = [
   { id: '2B', name: 'Member 2B', role: 'Critical Analyst', pair: 'Pair 2', pages: '13–15', sections: 'Part 2: Western Art Traditions', contributions: 'Impressionism–Modern masters; critical analyses on patronage, religion, society & Enlightenment.' },
   { id: '3A', name: 'Sean Rey O. Dizon', role: 'Content Researcher & Analyst (Part 3A)', pair: 'Pair 3', pages: '16–18', sections: 'Part 3: Asian & Philippine Art (Items 1 & 2)', contributions: 'Explained the distinct characteristics of Chinese, Japanese and Indian art traditions; conducted a comparative analysis of selected Asian artworks focusing on their cultural and historical significance, including citations.' },
   { id: '3B', name: 'Brian Rene R. De los Santos', role: 'Content Researcher & Analyst (Part 3B)', pair: 'Pair 3', pages: '19–21', sections: 'Part 3: Asian & Philippine Art (Items 3 & 4)', contributions: 'Presented and analyzed examples of Philippine indigenous art and traditional crafts; explained how Asian cultures and traditions influenced Philippine artistic practices using concrete visual examples and credible sources.' },
-  { id: '4A', name: 'Member 4A', role: 'Bikolano Heritage Researcher', pair: 'Pair 4', pages: '22–24', sections: 'Part 4: Philippine & Bikolano Heritage', contributions: 'Bikol visual/applied, literary & performing arts; artisans, landmarks & Peñafrancia spotlight.' },
+  { id: '4A', name: 'Jake Russel M. Fernandez', role: 'Content Researcher & Analyst (Part 4A)', pair: 'Pair 4', pages: '22–24', sections: 'Part 4: Philippine & Bikolano Heritage (Items 1 & 2)', contributions: 'Presented curated examples of Philippine and Bikolano visual, literary, performing, and applied arts (Slides 22–23); featured notable local Bikolano artists, artisans, traditional crafts, landmarks, and cultural traditions with cited sources (Slide 24).' },
   { id: '4B', name: 'Member 4B', role: 'Cultural Significance Analyst', pair: 'Pair 4', pages: '25–27', sections: 'Part 4: Philippine & Bikolano Heritage', contributions: 'Historical, social & livelihood significance; heritage preservation strategies.' },
-  { id: '5A', name: 'Member 5A', role: 'Contemporary Art Researcher', pair: 'Pair 5', pages: '28–30', sections: 'Part 5: Contemporary Art & Innovation', contributions: 'Contemporary Philippine art overview, diverse forms, appropriation & improvisation.' },
+  { id: '5A', name: 'Jannsen G. Datoon', role: 'Content Researcher & Analyst (Part 5A)', pair: 'Pair 5', pages: '28–30', sections: 'Part 5: Contemporary Art & Innovation (Items 1 & 2)', contributions: 'Discussed contemporary Philippine art and its diverse forms (Slides 28–29); explained the concepts of appropriation and improvisation in contemporary practice using relevant visual examples and citations (Slide 30).' },
   { id: '5B', name: 'Jhov Joshua E. Galvan', role: 'Content Researcher & Analyst (Part 5B)', pair: 'Pair 5', pages: '31–33', sections: 'Part 5: Contemporary Art & Innovation (Items 3 & 4)', contributions: 'Critiqued how contemporary artists utilize the elements and principles of design in modern works (Slides 31–32); analyzed how contemporary art communicates ideas, addresses social issues, and responds to societal changes, with references (Slide 33).' },
 ];
 
@@ -191,7 +191,7 @@ const P1 = {
   americanGothic: S('american-gothic', 'American Gothic', 'Grant Wood', '1930', 'Oil on beaverboard', 'American Gothic — Grant Wood, 1930. Oil on beaverboard.', 'https://commons.wikimedia.org/wiki/File%3AArt_Institute_of_Chicago-0955.jpg', { names: ['Part1_Slide4_AmericanGothic', 'American Gothic'], commons: 'Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg' }),
   nighthawks: S('nighthawks', 'Nighthawks', 'Edward Hopper', '1942', 'Oil on canvas', 'Nighthawks — Edward Hopper, 1942. Oil on canvas.', 'https://blog.artsper.com/en/a-closer-look/artwork-analysis-nighthawks-by-edward-hopper/', { names: ['Part1_Slide4_Nighthawks', 'Nighthawks'], commons: 'Nighthawks_by_Edward_Hopper_1942.jpg' }),
   greatWave: S('great-wave', 'The Great Wave off Kanagawa', 'Katsushika Hokusai', '1830–1832', 'Woodblock print, ink and color on paper', 'Under the Wave off Kanagawa — Katsushika Hokusai, 1830–1832. Woodblock print, ink and color on paper.', 'https://www.metmuseum.org/art/collection/search/45434', { names: ['Part1_Slide5_GreatWave', 'Part3_Slide1_Hokusai_GreatWave'], commons: 'Tsunami_by_hokusai_19th_century.jpg' }),
-  bedroom: S('the-bedroom', 'The Bedroom', 'Vincent van Gogh', '1889', 'Oil on canvas', 'The Bedroom — Vincent van Gogh, 1889. Oil on canvas.', 'https://www.artic.edu/artworks/28560/the-bedroom', { names: ['Part1_Slide6_TheBedroom', 'The Bedroom'], commons: 'Vincent_van_Gogh_-_The_Bedroom_-_Google_Art_Project.jpg' }),
+  bedroom: S('the-bedroom', 'The Bedroom', 'Vincent van Gogh', '1889', 'Oil on canvas', 'The Bedroom — Vincent van Gogh, 1889. Oil on canvas.', 'https://www.artic.edu/artworks/28560/the-bedroom', { names: ['Part1_Slide6_TheBedroom', 'The Bedroom'], commons: 'Vincent_van_Gogh_-_Van_Gogh\'s_Bedroom_in_Arles_-_Google_Art_Project.jpg' }),
 };
 
 const C1 = {
@@ -280,6 +280,32 @@ const P3 = {
       { label: 'Cultural Context', text: 'It was used by early communities in the Cordillera region, including the Ifugao, Kalinga, and Bontoc peoples. It was worn by both men and women as personal jewelry.' },
       { label: 'Significance', text: 'Lingling-o is associated with fertility and protection. It also reflects the craftsmanship, beliefs, and social traditions of early Filipino communities.' },
     ] }),
+
+  // ---- Slide 6 (Asian Influences on Philippine Art) ----
+  chinesePorcelain: S('chinese-porcelain', 'Chinese Porcelain', 'Chinese traders & early Filipino communities', 'Early Maritime Trade', 'Imported cobalt blue-and-white ceramics', 'Chinese Blue and White Wares (Pandanan), National Museum of the Philippines.', 'https://www.nationalmuseum.gov.ph/2021/10/31/chinese-blue-and-white-wares-pandanan/', {
+    names: ['Part3_Slide6_ChinesePorcelain', 'Part3_Slide6__Chinese porcelain'],
+    notes: [
+      { label: 'Chinese Influence', text: 'Chinese traders brought porcelain, ceramics, and other goods to the Philippines through early maritime trade. These items were exchanged for local products and became valuable household objects and signs of wealth. Chinese ceramic designs also influenced some local pottery styles.' },
+      { label: 'Example', text: 'Imported ceramics used in Filipino homes and valued for their detailed designs.' },
+    ] }),
+  goldenTara: S('golden-tara', 'Golden Tara', 'Early Philippine–Hindu-Buddhist Tradition', 'Pre-colonial (c. 9th–13th c.)', 'Solid gold figurine · Agusan', 'Golden Tara of Agusan, Cultural Center of the Philippines.', 'https://epa.culturalcenter.gov.ph/3/82/2191/', {
+    names: ['Part3_Slide6_GoldenTara', 'Part3_Slide6_Golden Tara'],
+    notes: [
+      { label: 'Indian Influence', text: 'Indian culture influenced Philippine art through Hindu-Buddhist beliefs, religious symbols, and literature. These influences reached the Philippines partly through trade and cultural connections with Indonesia and other Southeast Asian communities. Indian-inspired figures and stories became part of early Filipino culture.' },
+      { label: 'Example', text: 'A gold figure showing Hindu-Buddhist artistic influences in early Philippine art.' },
+    ] }),
+  lagunaCopperplate: S('laguna-copperplate', 'Laguna Copperplate Inscription', 'Early Maritime Southeast Asia', '900 CE', 'Inscribed copper plate · Laguna', 'Laguna Copperplate Inscription, National Museum of the Philippines.', 'https://www.nationalmuseum.gov.ph/2022/09/20/the-9th-to-10th-century-archaeological-evidence-of-maritime-relations-between-the-philippines-and-the-islands-of-southeast-asia/', {
+    names: ['Part3_Slide6_LagunaCopperplateInscription', 'Part3_Slide6_Laguna Copperplate Inscription'],
+    notes: [
+      { label: 'Southeast Asian Influence', text: 'Countries such as Indonesia, Malaysia, Thailand, and Vietnam influenced Philippine art through trade and cultural exchange. Their decorative patterns, artistic techniques, and writing traditions helped shape local crafts and cultural practices. These connections also influenced Philippine languages and traditional stories.' },
+      { label: 'Example', text: 'An ancient document showing connections with Southeast Asian languages and writing systems.' },
+    ] }),
+  maharadiaLawana: S('maharadia-lawana', 'Maharadia Lawana', 'Maranao literary tradition', 'Folk Epic Tradition', 'Lanao prose epic adapted from the Ramayana', 'Maharadia Lawana: Maranao adaptation of the Ramayana tradition.', 'https://books.google.com/books/about/Maharadia_Lawana.html?id=8u7rAAAAMAAJ', {
+    names: ['Part3_Slide6_MaharadiaLawana', 'Part3_Slide6_Maharadia Lawana'],
+    notes: [
+      { label: 'Example', text: 'A Maranao epic influenced by India\'s Ramayana, adapted into local storytelling.' },
+      { label: 'Cultural Exchange', text: 'Philippine art was influenced by Asian countries through trade and cultural exchange. China, India, and Southeast Asia introduced new designs, materials, beliefs, and stories that Filipinos adapted into their own culture.' },
+    ] }),
 };
 
 const C3 = {
@@ -298,15 +324,86 @@ const C3 = {
   bulul: 'The Metropolitan Museum of Art. (n.d.). Bulul (male rice deity figure) [Photograph]. The Metropolitan Museum of Art. https://www.metmuseum.org/art/collection/search/626371',
   sarimanok: 'BetterBARMM. (n.d.). Sarimanok (Maranao carving) [Photograph]. Living Crafts of the Bangsamoro. https://betterbarmm.com/crafts',
   linglingo: 'Museo Kordilyera. (n.d.). Lingling-o [Photograph]. Museo Kordilyera, University of the Philippines Baguio. https://museokordilyera.upb.edu.ph/museum-collections/lingling-o/',
+  chinesePorcelain: 'National Museum of the Philippines. (2021). Chinese Blue and White Wares (Pandanan). https://www.nationalmuseum.gov.ph/2021/10/31/chinese-blue-and-white-wares-pandanan/',
+  goldenTara: 'Cultural Center of the Philippines. (n.d.). Golden Tara of Agusan. CCP Encyclopedia of Philippine Art. https://epa.culturalcenter.gov.ph/3/82/2191/',
+  maritimeRelations: 'National Museum of the Philippines. (2022). The 9th to 10th Century Archaeological Evidence of Maritime Relations Between the Philippines and the Islands of Southeast Asia. https://www.nationalmuseum.gov.ph/2022/09/20/the-9th-to-10th-century-archaeological-evidence-of-maritime-relations-between-the-philippines-and-the-islands-of-southeast-asia/',
+  maharadiaLawana: 'Francisco, J. R. (1969). Maharadia Lawana: A Lanao Prose Version of the Ramayana, a Celebrated Hindu Poem. Philippine Folklore Society. https://books.google.com/books/about/Maharadia_Lawana.html?id=8u7rAAAAMAAJ',
+};
+
+const P4 = {
+  abacaSinamay: S('abaca-sinamay-4a', 'Abaca and Sinamay Weaving', 'Bikolano weavers', 'Living tradition', 'Abaca fibers & sinamay · Bicol', 'Abaca fibers woven into sinamay for bags, decorations, and local crafts.', 'https://ncca.gov.ph/about-ncca-3/subcommissions/subcommission-on-cultural-communities-and-traditional-arts-sccta/central-cultural-communities/the-bicolanos/', { names: ['Part4_Slide1_Abaca_Sinamay_Weaving'] }),
+  tiwiPottery: S('tiwi-pottery-4a', 'Tiwi Pottery (Tiwi, Albay)', 'Tiwi artisans · Tiwi, Albay', 'Living tradition', 'Local clay & ceramics · Tiwi, Albay', 'Local artisans use clay in Tiwi, Albay to create pots, jars, and decorative items.', 'https://systems.bicol-u.edu.ph/journal/assets/journal_pdf/3%20Ayo%2027_36.pdf', { names: ['Part4_Slide1_Tiwi_Pottery'] }),
+  ibalongEpic: S('ibalong-epic-4a', 'Ibalong Epic', 'Bikolano folk tradition', 'Pre-colonial / Folk Epic', 'Oral epic · Heroes Baltog, Handyong & Bantong', 'Ibalong Epic — famous Bikolano folk story of heroes Baltog, Handyong, and Bantong.', 'https://ncca.gov.ph/about-ncca-3/subcommissions/subcommission-on-the-arts-sca/literary-arts/bikol-literature-in-the-philippines/', { names: ['Part4_Slide2_Ibalong_Epic'] }),
+  bikolLiterature: S('bikolano-literature-4a', 'Rawitdawit & Bikolano Literature', 'Bikolano poets & writers', 'Traditional & living', 'Bikolano poetry & literary arts', 'Rawitdawit — traditional Bikolano poetry expressing personal feelings, experiences, and social ideas.', 'https://library.cspc.edu.ph/cgi-bin/koha/opac-detail.pl?', { names: ['Part4_Slide2_Bikolano_Literature'] }),
+  penafrancia: S('penafrancia-4a', 'Peñafrancia Fluvial Procession', 'Devotees of Our Lady of Peñafrancia (Ina)', 'Every September · Traditional', 'Naga River pagoda procession · Naga City, Camarines Sur', 'Peñafrancia Fluvial Procession — carrying the image of "Ina" on a decorated pagoda along the Naga River.', 'https://epa.culturalcenter.gov.ph/3/82/2249/', { names: ['Part4_Slide3_Penafrancia_Fluvial_Procession'] }),
+};
+
+const C4 = {
+  bicolanos: 'National Commission for Culture and the Arts. (n.d.). The Bicolanos. https://ncca.gov.ph/about-ncca-3/subcommissions/subcommission-on-cultural-communities-and-traditional-arts-sccta/central-cultural-communities/the-bicolanos/',
+  tiwiAyo: 'Bicol University. (2020). Ayo: Culture and heritage of Tiwi, Albay, through the lenses of cultural mapping. https://systems.bicol-u.edu.ph/journal/assets/journal_pdf/3%20Ayo%2027_36.pdf',
+  bikolLiterature: 'Realubit, M. L. F. (n.d.). Bikol literature in the Philippines. National Commission for Culture and the Arts. https://ncca.gov.ph/about-ncca-3/subcommissions/subcommission-on-the-arts-sca/literary-arts/bikol-literature-in-the-philippines/',
+  espinas: 'Espinas, M. B. (1996). Ibalong: The Bikol folk epic-fragment. UST Publishing House.',
+  penafranciaCcp: 'Santos, D. C. S. (2020). Our Lady of Peñafrancia / Nuestra Señora de Peñafrancia / Ina. Cultural Center of the Philippines Encyclopedia of Philippine Art. https://epa.culturalcenter.gov.ph/3/82/2249/',
+  nagaTourism: 'Naga City Investment and Tourism Promotions Office. (n.d.). A sea of faith: The Peñafrancia festivities in Naga City. https://tourism.naga.gov.ph/a-sea-of-faith-the-penafrancia-festivities-in-naga-city/',
 };
 
 const P5 = {
+  // ---- Part 5A (Jannsen G. Datoon) ----
+  makiUsisa: S('maki-usisa', 'Maki-Usisa, Makibaka, Makilahok', 'Gerilya', '2014', 'Acrylic Paint · Street Art / Mural', 'Maki-Usisa, Makibaka, Makilahok (2014) by Gerilya. Acrylic mural.', 'https://artsandculture.google.com/asset/maki-usisa-makibaka-makilahok/3wFCoYXmY04qSg', { names: ['Maki-Usisa, Makibaka, Makilahok EBD2', 'Part5_Slide2_StreetArt_Gerilya'] }),
+  balete: S('balete-leeroy', 'Balete', 'Leeroy New', '2022', 'Installation Art · Bamboo & recycled materials', 'Balete (2022) by Leeroy New — large installation inspired by the roots of a Balete tree.', 'https://www.biennaleofsydney.art/participants/leeroy-new/', {
+    names: ['Part5_Slide2_Balete_LeeroyNew'],
+    notes: [
+      { label: '1. Installation Art', text: 'Artworks arranged in a specific space to create an experience for viewers.' },
+      { label: 'Example', text: 'Balete (2022) by Leeroy New.' },
+      { label: 'Analysis', text: 'It uses recycled materials to create a large structure inspired by the roots of a Balete tree.' },
+    ] }),
+  aliensOfManila: S('aliens-of-manila', 'Aliens of Manila', 'Leeroy New', 'Contemporary', 'Performance Art · Wearable sculptures & costumes', 'Aliens of Manila by Leeroy New — wearable sculptures, costumes, and performances.', 'https://www.biennaleofsydney.art/participants/leeroy-new/', {
+    names: ['Part5_Slide2_AliensOfManila_LeeroyNew'],
+    notes: [
+      { label: '2. Performance Art', text: 'Art expressed through live actions, movements, and interaction with an audience.' },
+      { label: 'Example', text: 'Aliens of Manila by Leeroy New.' },
+      { label: 'Analysis', text: 'It combines wearable sculptures, costumes, and performances to explore identity and everyday life.' },
+    ] }),
+  ourIslands: S('our-islands-atienza', 'Our Islands', 'Martha Atienza', 'Contemporary', 'Digital / New Media Art · Video installation', 'Our Islands by Martha Atienza — video artwork presenting environmental and social issues.', 'https://www.scu.edu/desaisset/exhibitions/atienza/', {
+    names: ['Part5_Slide2_OurIslands_MarthaAtienza'],
+    notes: [
+      { label: '3. Digital / New Media Art', text: 'Art that uses technology, video, digital images, and other electronic media.' },
+      { label: 'Example', text: 'Our Islands by Martha Atienza.' },
+      { label: 'Analysis', text: 'It uses video to present environmental and social issues affecting island communities.' },
+    ] }),
+  cajipeEndaya: S('mixed-media-cajipe', 'Mixed-Media Works', 'Imelda Cajipe-Endaya', 'Contemporary', 'Mixed Media Art · Textiles, found objects & collage', 'Mixed-media works by Imelda Cajipe-Endaya combining textiles and found objects.', 'https://www.artfairphilippines.com/afp2026/projects2.php?id=1', {
+    names: ['Part5_Slide2_MixedMedia_ImeldaCajipeEndaya'],
+    notes: [
+      { label: '4. Mixed Media Art', text: 'Art that combines different materials and artistic techniques in one artwork.' },
+      { label: 'Example', text: 'Mixed-media works by Imelda Cajipe-Endaya.' },
+      { label: 'Analysis', text: 'She combines textiles, found objects, and other materials to express women’s experiences and Filipino identity.' },
+    ] }),
+  streetArtGerilya: S('street-art-gerilya', 'Maki-Usisa, Makibaka, Makilahok', 'Gerilya', '2014', 'Street Art / Murals · Acrylic on public wall', 'Maki-Usisa, Makibaka, Makilahok (2014) by Gerilya — street mural.', 'https://artsandculture.google.com/story/gerilya-filipino-street-art/MQVhBVB_LBkA8A', {
+    names: ['Part5_Slide2_StreetArt_Gerilya', 'Maki-Usisa, Makibaka, Makilahok EBD2'],
+    notes: [
+      { label: '5. Street Art / Murals', text: 'Art created on public walls and other visible spaces to communicate ideas and messages.' },
+      { label: 'Example', text: 'Maki-Usisa, Makibaka, Makilahok (2014) by Gerilya.' },
+      { label: 'Analysis', text: 'It uses public spaces to promote social awareness and encourage people to participate in society.' },
+    ] }),
+  mishandleWithCare: S('mishandle-with-care', 'Mishandle with Care', 'Demetrio dela Cruz', '2020', 'Appropriation · Reinterpreted Filipino paintings', 'Mishandle with Care (2020) by Demetrio dela Cruz.', 'https://www.demetrioart.com/portfolios/2020-mishandle-with-care/', { names: ['Part5_Slide3_MishandleWithCare_DemetrioDelaCruz'], tags: ['Appropriation'] }),
+  miguelAssemblage: S('miguel-aquilizan-assemblage', 'Assemblage Artworks', 'Miguel Aquilizan', 'Contemporary', 'Improvisation · Discarded & ordinary objects', 'Miguel Aquilizan’s assemblage artworks using discarded and ordinary objects.', 'https://www.miguelaquilizan.com/about', { names: ['Part5_Slide3_MiguelAquilizan_Assemblage'], tags: ['Improvisation'] }),
+
+  // ---- Part 5B (Jhov Joshua E. Galvan) ----
   arkipelago: S('arkipelago', 'Arkipelago', 'Mark Justiniani', '2019', 'Mixed media installation (mirrors, glass, metal frames, LED lights, found objects)', 'Arkipelago — Mark Justiniani, 2019. Mixed media installation.', 'https://lifestyle.inquirer.net/339984/at-58th-venice-biennale-philippine-arkipelago-rises/', { names: ['arkipelago'] }),
   mebuyan: S('mebuyans-colony', 'Mebuyan’s Colony', 'Leeroy New', '2022', 'Mixed media installation (bamboo, recycled plastic, cable ties)', 'Mebuyan’s Colony — Leeroy New, 2022. Mixed media installation.', 'https://www.tatlerasia.com/lifestyle/arts/leeroy-new-mebuyan-colony-and-mebuyan-vessel', { names: ['mebuyanscolony'] }),
   lupang: S('lupang-ninuno', 'Lupang Ninuno (Mural advocating for Lumad rights)', 'Archie Oclos', '2018', 'Mural', 'Lupang Ninuno — Archie Oclos, 2018. Mural advocating for Lumad rights.', 'https://archieoclos.com/passion-projects-slides/#ninuno', { names: ['lupangninuno'] }),
 };
 
 const C5 = {
+  nccaContext: 'National Commission for Culture and the Arts. (n.d.). In focus: Philippine arts in context. https://ncca.gov.ph/about-culture-and-arts/in-focus/philippine-arts-in-context/',
+  nccaFlux: 'National Commission for Culture and the Arts. (n.d.). Crossbred and emigre: Visual art in a flux. https://ncca.gov.ph/about-ncca-3/subcommissions/subcommission-on-the-arts-sca/visual-arts/crossbred-and-emigre-visual-art-in-a-flux/',
+  gerilyaStory: 'Filipino Street Art Project. (n.d.). Gerilya. Google Arts & Culture. https://artsandculture.google.com/story/gerilya-filipino-street-art/MQVhBVB_LBkA8A',
+  makiUsisaAsset: 'Google Arts & Culture. (n.d.). Maki-Usisa, Makibaka, Makilahok – Gerilya. https://artsandculture.google.com/asset/maki-usisa-makibaka-makilahok/3wFCoYXmY04qSg',
+  leeroyNew: 'Biennale of Sydney. (2022). Leeroy New. https://www.biennaleofsydney.art/participants/leeroy-new/',
+  ourIslands: 'de Saisset Museum. (2025). Martha Atienza: Our Islands. Santa Clara University. https://www.scu.edu/desaisset/exhibitions/atienza/',
+  cajipeEndaya: 'Art Fair Philippines. (2026). Imelda Cajipe Endaya: A Votary’s Art. https://www.artfairphilippines.com/afp2026/projects2.php?id=1',
+  mishandleWithCare: 'Demetrio dela Cruz. (2020). Mishandle with Care. https://www.demetrioart.com/portfolios/2020-mishandle-with-care/',
+  miguelAquilizan: 'Miguel Aquilizan. (n.d.). About. https://www.miguelaquilizan.com/about',
   arkipelago: 'Baga-Reyes, V. (2019, July 8). At 58th Venice Biennale, Philippine \'Arkipelago\' rises. Philippine Daily Inquirer. https://lifestyle.inquirer.net/339984/at-58th-venice-biennale-philippine-arkipelago-rises/',
   mebuyan: 'Sorilla IV, F. (2023, April 27). Leeroy New on his monumental works, Mebuyan\'s Colony and Mebuyan\'s Vessel. Tatler Asia. https://www.tatlerasia.com/lifestyle/arts/leeroy-new-mebuyan-colony-and-mebuyan-vessel',
   lupang: 'Oclos, A. (2018). Passion Projects: Lupang Ninuno. Archie Oclos. https://archieoclos.com/passion-projects-slides/#ninuno',
@@ -633,71 +730,65 @@ const CORE_DRAFTS: Draft[] = [
     citations: [C3.manunggul, C3.bulul, C3.sarimanok, C3.linglingo],
   },
   {
-    pageNumber: 21, partNumber: 3, slideLayout: 'comparative-split',
+    pageNumber: 21, partNumber: 3, slideLayout: 'craft-catalog',
     title: 'Asian Influences on Philippine Art',
-    subtitle: 'Trade, faith and exchange across the archipelago',
+    subtitle: 'Chinese · Indian · Southeast Asian Exchanges',
     assignedMember: by('3B'),
     conciseExplanation: [
-      'Long before Spain, the islands were part of maritime networks linking China, India, Borneo and the Malay world. Chinese porcelain appears in burial sites; Indic scripts shaped baybayin and the Laguna Copperplate; Islamic art arrived in Mindanao and Sulu.',
-      'These influences were localised: Chinese motifs were absorbed into Filipino ceramics and Hindu-Buddhist ideas into golden ornaments like the Agusan Tara.',
+      'Philippine art was influenced by Asian countries through trade and cultural exchange. China, India, and Southeast Asia introduced new designs, materials, beliefs, and stories that Filipinos adapted into their own culture.',
     ],
-    criticalAnalysis: {
-      heading: 'Localisation, Not Imitation',
-      content: 'Filipino artisans adapted foreign forms to local meanings. Hybridity is a strength of Philippine art, not a sign of derivativeness.',
-      culturalHistoricalContext: 'The Laguna Copperplate Inscription (900 CE) proves early ties to Java and the Indic world.',
-    },
-    artworks: [ART.borobudur, ART.okir],
-    citations: [R.guillermo, R.ccp, R.craven],
+    criticalAnalysis: { heading: '', content: '' },
+    artworks: [P3.chinesePorcelain, P3.goldenTara, P3.lagunaCopperplate, P3.maharadiaLawana],
+    citations: [C3.chinesePorcelain, C3.goldenTara, C3.maritimeRelations, C3.maharadiaLawana],
   },
 
   // ======================= PART 4 =======================
   {
     pageNumber: 22, partNumber: 4, slideLayout: 'heritage-spotlight',
-    title: 'Bikolano Visual & Applied Arts',
-    subtitle: 'Abaca & Sinamay · Tiwi Ceramics · Colonial Churches',
+    title: 'The Creativity and Craftsmanship of the Bikolano People',
+    subtitle: 'Philippine & Bikolano Visual and Applied Arts',
     assignedMember: by('4A'),
     conciseExplanation: [
-      'Bicol is the abaca capital of the country. Albay, Catanduanes and Sorsogon artisans strip and weave abaca into sinamay, hats and bags. In Tiwi, potters shape red clay into palayok and decorative ware. Colonial stone churches such as Daraga’s Baroque façade show local adaptation of Spanish forms using volcanic stone.',
+      '1. Abaca and Sinamay Weaving — Abaca is one of the important natural resources of Bicol. Its fibers are used to create sinamay, a woven material used for bags, decorations, and other products. This craft shows the creativity and skills of local weavers.',
+      '2. Tiwi Pottery (Tiwi, Albay) — Tiwi, Albay is known for its pottery and ceramic products. Local artisans use clay to create pots, jars, and decorative items. This traditional craft shows how Bicolanos use natural resources to create useful and beautiful products.',
     ],
     criticalAnalysis: {
-      heading: 'Material as Identity',
-      content: 'Volcanic stone, abaca and clay are gifts of the Bicol landscape — the same Mayon that threatens also supplies the materials. Bikolano art is literally built from its environment.',
-      culturalHistoricalContext: 'Daraga Church was declared a National Cultural Treasure in 2007.',
+      heading: 'Artistic Features and Importance',
+      content: 'Bikolano crafts show the creativity and skills of local people. Sinamay weaving uses natural abaca fibers to create useful and beautiful products. Meanwhile, Tiwi pottery uses local clay to make different ceramic items. Some designs show the influence of Mayon Volcano. These crafts represent the culture, resources, and artistic skills of the Bicolanos.',
     },
-    artworks: [ART.daraga, ART.abaca, ART.tiwi],
-    citations: [R.realubit, R.philfida, R.ncca],
+    artworks: [P4.abacaSinamay, P4.tiwiPottery],
+    citations: [C4.bicolanos, C4.tiwiAyo],
   },
   {
     pageNumber: 23, partNumber: 4, slideLayout: 'heritage-spotlight',
-    title: 'Bikolano Literary & Performing Arts',
-    subtitle: 'Ibalong Epic · Rawitdawit · Tigsik · Pantomina',
+    title: 'Stories and Rhythms of Bicol: Literature and Performing Arts',
+    subtitle: 'Philippine & Bikolano Literary and Performing Arts',
     assignedMember: by('4A'),
     conciseExplanation: [
-      'The Ibalong epic narrates heroes Baltog, Handyong and Bantong who cleared the land of monsters. Rawitdawit (poetry) and tigsik (witty extemporaneous verse) show Bikolano verbal artistry, while the Pantomina mimics courting doves in festive dance.',
+      '1. Ibalong Epic — A famous Bikolano folk story about heroes such as Baltog, Handyong, and Bantong. It tells stories of bravery, adventures, and the early people of Bicol.',
+      '2. Rawitdawit — A traditional Bikolano form of poetry that expresses personal feelings, experiences, and opinions about society.',
     ],
     criticalAnalysis: {
-      heading: 'Epic as Civic Memory',
-      content: 'Today’s Ibalong Festival turns a fragmentary epic into a shared identity performance. Tradition is not frozen; communities reinterpret it to meet present needs.',
-      culturalHistoricalContext: 'The surviving Ibalong text comes from Fr. José Castaño’s 1895 Spanish account.',
+      heading: 'Concise Description & Literary Elements',
+      content: 'Bikolano literature and performances help preserve the stories, beliefs, and experiences of our ancestors. The Ibalong Epic shares stories of brave heroes and their adventures. Rawitdawit uses poems to express emotions and ideas about life and society. These literary works show the creativity, imagination, and identity of the Bikolano people.',
     },
-    artworks: [ART.ibalong, ART.pantomina],
-    citations: [R.castano, R.realubit, R.ccp],
+    artworks: [P4.ibalongEpic, P4.bikolLiterature],
+    citations: [C4.bikolLiterature, C4.espinas],
   },
   {
     pageNumber: 24, partNumber: 4, slideLayout: 'heritage-spotlight',
-    title: 'Bikolano Artists, Landmarks & Peñafrancia',
-    subtitle: 'Artisans, sacred landmarks & devotional heritage',
+    title: 'Peñafrancia Festival: A Symbol of Bikolano Faith and Unity',
+    subtitle: 'Featured Tradition — Peñafrancia Fluvial Procession (Naga City, Camarines Sur)',
     assignedMember: by('4A'),
     conciseExplanation: [
-      'Bicol’s heritage lives in its artisans — weavers, potters, carvers of the Peñafrancia image’s carriages — and its landmarks: Cagsawa Ruins beneath Mayon, Daraga Church, and Naga’s Basilica. Every September, the Peñafrancia Fiesta draws millions as voyadores carry Ina through the streets and along the Bicol River.',
+      'The Peñafrancia Fluvial Procession is one of the most important religious traditions in Bicol. It is held every September in Naga City to honor Our Lady of Peñafrancia, also known as "Ina." During the procession, her image is carried on a decorated floating platform called a pagoda along the Naga River.',
     ],
     criticalAnalysis: {
-      heading: 'Devotion as Total Artwork',
-      content: 'The Peñafrancia Fiesta combines sculpture, music, costume, decoration and choreographed movement — a Gesamtkunstwerk created by the community rather than a single artist.',
-      culturalHistoricalContext: 'Devotion to Our Lady of Peñafrancia in Naga dates to 1710.',
+      heading: 'Profile & Artistic Contribution',
+      content: 'This tradition shows the strong faith, cooperation, and unity of the Bikolano people. It also showcases local creativity through the decorations, religious music, and cultural activities. It brings families, communities, and visitors together to celebrate Bicolano heritage.',
     },
-    artworks: [ART.cagsawa, ART.penafrancia],
-    citations: [R.realubit, R.ncca, R.unesco],
+    artworks: [P4.penafrancia],
+    citations: [C4.penafranciaCcp, C4.nagaTourism],
   },
   {
     pageNumber: 25, partNumber: 4, slideLayout: 'comparative-split',
@@ -753,53 +844,51 @@ const CORE_DRAFTS: Draft[] = [
 
   // ======================= PART 5 =======================
   {
-    pageNumber: 28, partNumber: 5, slideLayout: 'timeline-context',
-    title: 'Contemporary Philippine Art',
-    subtitle: 'Overview & Evolution',
+    pageNumber: 28, partNumber: 5, slideLayout: 'single-masterpiece',
+    title: 'What Defines Contemporary Philippine Art?',
+    subtitle: 'Contemporary Philippine Art — Art, Culture, and Modern Society',
     assignedMember: by('5A'),
     conciseExplanation: [
-      'From Amorsolo’s luminous pastorals to the modernists led by Victorio Edades, Philippine art moved toward new forms. Social realists confronted martial law, and today artists such as BenCab, the Aquilizans and Pacita Abad engage global audiences while rooted in Filipino experience.',
+      'Contemporary Philippine Art refers to artworks created by Filipino artists in the present era. It reflects Filipino culture, identity, experiences, and the issues happening in society.',
+      'Characteristics — Expresses Filipino culture, identity, and traditions; reflects social, political, and environmental issues; uses different materials, techniques, and technologies; encourages creativity, experimentation, and new ideas; and combines traditional influences with modern artistic practices.',
+      'Shift from Traditional and Modern Art — Traditional Art: Focuses on cultural heritage, customs, and traditional techniques. Modern Art: Introduces new styles, experimentation, and different ways of presenting art. Contemporary Art: Explores various forms and materials while responding to present-day society.',
     ],
     criticalAnalysis: {
-      heading: 'Global Yet Local',
-      content: 'Contemporary Filipino artists navigate the global art market while addressing migration, identity and inequality — local experiences that resonate worldwide.',
+      heading: 'Featured Artwork: Maki-Usisa, Makibaka, Makilahok (2014) — Gerilya',
+      content: 'This mural presents Filipino students and important social events. It encourages people to ask questions, participate in society, and become aware of social issues. It shows how art can communicate meaningful messages.',
+      culturalHistoricalContext: 'Medium: Acrylic Paint · Art Form: Street Art / Mural (catalogued as a 2014 acrylic mural by Gerilya).',
     },
-    artworks: [ART.spoliarium, ART.bencab, ART.pacita, ART.aquilizan],
-    citations: [R.guillermo, R.smith, R.flores],
+    artworks: [P5.makiUsisa],
+    citations: [C5.nccaContext, C5.nccaFlux, C5.gerilyaStory, C5.makiUsisaAsset],
   },
   {
-    pageNumber: 29, partNumber: 5, slideLayout: 'comparative-split',
-    title: 'Diverse Forms of Contemporary Art',
-    subtitle: 'Installation · Performance · Digital/New Media · Street Art',
+    pageNumber: 29, partNumber: 5, slideLayout: 'craft-catalog',
+    title: 'Different Forms of Contemporary Art',
+    subtitle: 'Installation · Performance · Digital/New Media · Mixed Media · Street Art',
     assignedMember: by('5A'),
     conciseExplanation: [
-      'Installation art transforms whole spaces; performance makes the artist’s body and time the medium; digital and new media use code, screens and interactivity; street art reclaims public walls for communities.',
-      'Filipino artists such as David Medalla pioneered kinetic art, while muralists bring art to the streets.',
+      'Contemporary art has different forms that allow artists to express their creativity using various materials, techniques, and technologies. These different forms show that contemporary art is not limited to paintings and sculptures. Artists can use many creative ways to express their ideas and connect with people.',
     ],
-    criticalAnalysis: {
-      heading: 'Expanding the Frame',
-      content: 'These forms reject the framed object, prioritising experience, participation and site. They democratise art — but also challenge how it is collected and preserved.',
-      culturalHistoricalContext: 'Medalla’s Cloud Canyons (1963) is held by Tate, London.',
-    },
-    artworks: [ART.medalla, ART.streetArt],
-    citations: [R.bishop, R.paul, R.smith],
+    criticalAnalysis: { heading: '', content: '' },
+    artworks: [P5.balete, P5.aliensOfManila, P5.ourIslands, P5.cajipeEndaya, P5.streetArtGerilya],
+    citations: [C5.leeroyNew, C5.ourIslands, C5.cajipeEndaya, C5.gerilyaStory, C5.makiUsisaAsset],
   },
   {
     pageNumber: 30, partNumber: 5, slideLayout: 'comparative-split',
-    title: 'Appropriation & Improvisation',
-    subtitle: 'Borrowing, remixing and making do',
+    title: 'Appropriation and Improvisation in Art',
+    subtitle: 'Reimagining imagery & spontaneous creation',
     assignedMember: by('5A'),
     conciseExplanation: [
-      'Appropriation borrows existing images or objects and recontextualises them. Duchamp’s readymade opened the door; Filipino artists such as Santiago Bose appropriated folk Catholic imagery to critique power.',
-      'Improvisation — the Filipino diskarte — uses found and recycled materials creatively, as in the Aquilizans’ community installations.',
+      'Contemporary artists use different techniques to create new meanings and express their creativity.',
+      'A. Appropriation — Appropriation is the process of borrowing or using existing images, artworks, or ideas and changing their context to create a new meaning. Example: Mishandle with Care (2020) by Demetrio dela Cruz. The artist reinterprets famous paintings by Filipino artists such as Juan Luna, BenCab, and Carlos “Botong” Francisco. He adds new details to the original images, giving them a different presentation and meaning.',
+      'B. Improvisation — Improvisation is the process of creating or adapting art spontaneously using available materials, unexpected ideas, or different techniques. Example: Miguel Aquilizan’s assemblage artworks. Miguel Aquilizan uses discarded and ordinary objects to create new artistic forms. His creative process is guided by experimentation and imagination, showing that even simple materials can become meaningful artworks.',
     ],
     criticalAnalysis: {
-      heading: 'Who Owns an Image?',
-      content: 'Appropriation raises questions of originality and copyright, but it also lets marginalised artists talk back to dominant imagery. Context determines whether borrowing is critique or theft.',
-      culturalHistoricalContext: 'Benjamin argued mechanical reproduction erodes the “aura” of the original.',
+      heading: 'Conclusion',
+      content: 'Appropriation and improvisation show how artists can develop new ideas by reusing existing images, exploring materials, and experimenting with different creative techniques.',
     },
-    artworks: [ART.fountain, ART.santos],
-    citations: [R.benjamin, R.smith, R.guillermo],
+    artworks: [P5.mishandleWithCare, P5.miguelAssemblage],
+    citations: [C5.mishandleWithCare, C5.miguelAquilizan],
   },
   {
     pageNumber: 31, partNumber: 5, slideLayout: 'design-breakdown',
