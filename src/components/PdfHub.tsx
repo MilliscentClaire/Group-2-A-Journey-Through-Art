@@ -18,11 +18,11 @@ interface MatrixEntry {
 }
 
 const ROSTER_PAIRS: [string, string][] = [
-  ['1. Blanqueza, Milliscent Claire Dasalla', '6. De los Santos, Brian Rene R.'],
-  ['2. Boletic, Althea Alabat', '7. Dizon, Sean Rey Olbes'],
-  ['3. Calalo, Hazel Mendoza', '8. Fernandez, Jake Russel Mañago'],
-  ['4. Daco, Thomas Gabriel Tria', '9. Galvan, Jhov Joshua Espiritu'],
-  ['5. Datoon, Jannsen Gata', '9 Active Contributors · 100% Complete'],
+  ['1. Blanqueza, Milliscent Claire Dasalla', '6. Datoon, Jannsen Gata'],
+  ['2. Boletic, Althea Alabat', '7. De los Santos, Brian Rene R.'],
+  ['3. Calalo, Hazel Mendoza', '8. Dizon, Sean Rey Olbes'],
+  ['4. Casanes, Andrie Jimuel Bero', '9. Fernandez, Jake Russel Mañago'],
+  ['5. Daco, Thomas Gabriel Tria', '10. Galvan, Jhov Joshua Espiritu'],
 ];
 
 const MATRIX_ENTRIES: MatrixEntry[] = [
@@ -85,19 +85,17 @@ const MATRIX_ENTRIES: MatrixEntry[] = [
   },
   {
     num: '5',
-    name: 'Blanqueza, Milliscent Claire D.',
-    role: 'Researcher & Analyst (Part 2B · Assumed by Leader)',
+    name: 'Casanes, Andrie Jimuel B.',
+    role: 'Content Researcher & Analyst (Part 2B)',
     section: 'Part 2: Western Art Traditions',
     pages: 'Pages 13–15',
     deliverables: [
-      'Assumed and completed all deliverables originally slotted for Member 2B (non-participating).',
-      'Page 13: Curated Monet’s Impression, Sunrise, Seurat’s La Grande Jatte, Kandinsky’s Composition VII, & Duchamp’s Fountain.',
-      'Page 14: Analyzed Counter-Reformation Church patronage & Napoleonic wartime politics (Caravaggio vs. Goya).',
-      'Page 15: Critiqued Enlightenment, industrialization & class shifts (Delacroix & Millet) with verified museum APA URLs.',
+      'Page 13: Featured modern Western masterworks (Monet’s Impression, Sunrise, Van Gogh’s The Starry Night, Picasso’s Les Demoiselles d’Avignon & Guernica).',
+      'Page 14: Analyzed how religion, patronage, and revolutions shaped Western art (Caravaggio, David’s Oath of the Horatii, Picasso’s Guernica).',
+      'Page 15: Examined how social class and industrialization shaped art (Millet’s The Gleaners, Monet’s Impression, Sunrise, Daumier’s The Third-Class Carriage).',
+      'Provided verified museum references and APA citations for Pages 13–15.',
     ],
     status: 'Completed',
-    statusNote: '(Assumed by Leader)',
-    assumed: true,
   },
   {
     num: '6',
@@ -217,7 +215,7 @@ function MemberContributionsDocument() {
         <div className="grid grid-cols-1 md:grid-cols-2 plaque-border text-[12.5px]">
           <div className="grid grid-cols-[160px_1fr] border-b border-line md:border-r">
             <div className="bg-card/80 px-3.5 py-2.5 font-semibold text-ink border-r border-line">Group Number</div>
-            <div className="px-3.5 py-2.5 text-ink/90">Group 2 (9 Active Contributors · 2 Slots Covered by Leader)</div>
+            <div className="px-3.5 py-2.5 text-ink/90">Group 2 (10 Active Contributors · 1 Slot Covered by Leader)</div>
           </div>
           <div className="grid grid-cols-[160px_1fr] border-b border-line">
             <div className="bg-card/80 px-3.5 py-2.5 font-semibold text-ink border-r border-line">Course &amp; Instructor</div>
@@ -256,10 +254,10 @@ function MemberContributionsDocument() {
           </p>
           <ul className="space-y-1.5 text-[13px] text-ink/90 pl-4 list-disc">
             <li>
-              <b className="text-gold">Project Leader (Milliscent Claire D. Blanqueza):</b> Authored Front Matter (Pages 1–3) and Back Matter (REF-1–REF-6 &amp; ROLES), assumed and authored Part 2B (Pages 13–15) and Part 4B (Pages 25–27) for the two non-participating slots, compiled all APA references and artwork credits, built the interactive exhibition suite and dual Black &amp; Parchment PDF editions, and ran final quality assurance.
+              <b className="text-gold">Project Leader (Milliscent Claire D. Blanqueza):</b> Authored Front Matter (Pages 1–3) and Back Matter (REF-1–REF-6 &amp; ROLES), assumed and authored Part 4B (Pages 25–27) for the remaining non-participating slot, compiled all APA references and artwork credits, built the interactive exhibition suite and dual Black &amp; Parchment PDF editions, and ran final quality assurance.
             </li>
             <li>
-              <b className="text-gold">Contributing Pair Members (8 Active Contributors + Project Leader):</b> Eight active groupmates completed original explanations, analyses, artwork curation, and verified citations for Parts 1A, 1B, 2A, 3A, 3B, 4A, 5A, and 5B (3 pages each), while the Project Leader completed Parts 2B and 4B so every section meets rubric expectations.
+              <b className="text-gold">Contributing Pair Members (9 Active Wing Contributors + Project Leader):</b> Nine active groupmates completed original explanations, analyses, artwork curation, and verified citations for Parts 1A, 1B, 2A, 2B, 3A, 3B, 4A, 5A, and 5B (3 pages each), while the Project Leader completed Part 4B so every section meets rubric expectations.
             </li>
           </ul>
         </div>
@@ -267,7 +265,7 @@ function MemberContributionsDocument() {
         {/* 2. Official Alphabetical Roster */}
         <div className="space-y-3">
           <h4 className="font-serif text-[21px] font-semibold text-ink border-b border-gold/50 pb-1.5">
-            2. Official Group 2 Member Roster (Alphabetical Index — 9 Active Contributors)
+            2. Official Group 2 Member Roster (Alphabetical Index — 10 Active Contributors)
           </h4>
           <div className="plaque-border overflow-hidden">
             <table className="w-full text-left border-collapse text-[13px]">
@@ -275,9 +273,7 @@ function MemberContributionsDocument() {
                 {ROSTER_PAIRS.map(([left, right], idx) => (
                   <tr key={left} className={`border-b border-line last:border-b-0 ${idx % 2 === 0 ? 'bg-card/45' : 'bg-wall/40'}`}>
                     <td className="px-4 py-2 font-serif text-[14.5px] text-ink border-r border-line w-1/2">{left}</td>
-                    <td className={`px-4 py-2 font-serif text-[14.5px] w-1/2 ${idx === ROSTER_PAIRS.length - 1 ? 'text-gold font-semibold' : 'text-ink'}`}>
-                      {right}
-                    </td>
+                    <td className="px-4 py-2 font-serif text-[14.5px] text-ink w-1/2">{right}</td>
                   </tr>
                 ))}
               </tbody>
