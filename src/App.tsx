@@ -10,9 +10,16 @@ import { animateCounter, animateFrameReveal, animateProgress, animateSlideIn } f
 type Mode = 'exhibit' | 'pdf' | 'print';
 
 export default function App() {
-  const [mode, setMode] = useState<Mode>('exhibit');
+  const [mode, setMode] = useState<Mode>(() => {
+    const p = new URLSearchParams(window.location.search).get('mode');
+    return p === 'print' || p === 'pdf' || p === 'exhibit' ? p : 'exhibit';
+  });
   const [index, setIndex] = useState(0);
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => (localStorage.getItem('g2-theme') as 'dark' | 'light') || 'dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const t = new URLSearchParams(window.location.search).get('theme');
+    if (t === 'dark' || t === 'light') return t;
+    return (localStorage.getItem('g2-theme') as 'dark' | 'light') || 'dark';
+  });
   const [lightbox, setLightbox] = useState<{ art: Artwork; slide: PortfolioSlide } | null>(null);
   const [jumpOpen, setJumpOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);

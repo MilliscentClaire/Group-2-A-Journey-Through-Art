@@ -19,10 +19,13 @@ export function ArtImage({
     [art.localImagePath, art.imageUrl],
   );
   const [idx, setIdx] = useState(0);
+  const [portrait, setPortrait] = useState(false);
 
   const imgRef = useCallback(
     (el: HTMLImageElement | null) => {
       if (el && el.complete && el.naturalWidth > 0 && el.naturalHeight > 0) {
+        const isPort = el.naturalWidth / el.naturalHeight < 0.88;
+        setPortrait((prev) => (prev === isPort ? prev : isPort));
         onSize?.(el.naturalWidth, el.naturalHeight);
       }
     },
@@ -40,7 +43,15 @@ export function ArtImage({
       loading="eager"
       decoding="async"
       referrerPolicy="no-referrer"
-      onLoad={(e) => onSize?.(e.currentTarget.naturalWidth, e.currentTarget.naturalHeight)}
+      style={fit === 'cover' ? { objectPosition: art.objectPosition ?? (portrait ? '50% 6%' : '50% 50%') } : undefined}
+      onLoad={(e) => {
+        const { naturalWidth, naturalHeight } = e.currentTarget;
+        if (naturalWidth > 0 && naturalHeight > 0) {
+          const isPort = naturalWidth / naturalHeight < 0.88;
+          setPortrait((prev) => (prev === isPort ? prev : isPort));
+        }
+        onSize?.(naturalWidth, naturalHeight);
+      }}
       onError={() => {
         setIdx((i) => {
           const next = i + 1;

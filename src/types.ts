@@ -31,6 +31,8 @@ export interface Artwork {
   localImagePath?: string;
   caption: string;
   sourceUrl: string;
+  /** CSS object-position override (e.g. '50% 4%') so tall portraits keep faces/heads framed. */
+  objectPosition?: string;
   calloutTags?: string[];
   /** Labelled detail blocks (Featured / Cultural Context / Significance) shown on craft-catalog cards. */
   notes?: { label: string; text: string }[];

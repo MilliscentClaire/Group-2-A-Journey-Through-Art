@@ -21,7 +21,10 @@ export const COURSE = {
   instructor: 'Instructor: [Instructor Name]',
   school: '[University / College Name]',
   term: 'First Semester, A.Y. 2026–2027',
-  pdfPath: '/Group2_Art_Appreciation_Portfolio.pdf',
+  pdfPath: '/Group2_Art_Appreciation_Portfolio_Black.pdf',
+  pdfBlackPath: '/Group2_Art_Appreciation_Portfolio_Black.pdf',
+  pdfParchmentPath: '/Group2_Art_Appreciation_Portfolio_Parchment.pdf',
+  contributionDocxPath: '/AA_CONTRIBUTION.docx',
 };
 
 /** ✏️ Replace "Member 1A" etc. with real names — every slide updates automatically. */
@@ -72,11 +75,22 @@ function L(id: string, title: string, artist: string, yearOrPeriod: string, medi
   return { id, title, artist, yearOrPeriod, mediumOrOrigin, imageUrl: '', sourceUrl, caption, calloutTags };
 }
 
+const LOCAL_IMAGES = import.meta.glob('../images/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const stem = (p: string) => (p.split('/').pop() ?? '').replace(/\.[^.]+$/, '').toLowerCase();
+/** First local file whose name matches one of `names`; otherwise the /public path shown on the placeholder. */
+const localImg = (...names: string[]): string => {
+  for (const n of names) {
+    const hit = Object.entries(LOCAL_IMAGES).find(([k]) => stem(k) === n.toLowerCase());
+    if (hit) return hit[1];
+  }
+  return `/images/${names[0]}.jpg`;
+};
+
 const ART = {
   monaLisa: A('mona-lisa', 'Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg', 'Mona Lisa', 'Leonardo da Vinci', 'c. 1503–1519', 'Oil on poplar panel · Louvre, Paris', 'Sfumato modelling dissolves contour into atmosphere, making the sitter seem alive.'),
   starryNight: A('starry-night', 'Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg', 'The Starry Night', 'Vincent van Gogh', '1889', 'Oil on canvas · MoMA, New York', 'Swirling impasto turns a night sky into a record of inner turbulence.'),
   greatWave: A('great-wave', 'Tsunami_by_hokusai_19th_century.jpg', 'The Great Wave off Kanagawa', 'Katsushika Hokusai', 'c. 1831', 'Woodblock print (ukiyo-e) · Japan', 'A clawing wave dwarfs boatmen while Mount Fuji sits small and still.'),
-  schoolAthens: A('school-athens', '"The_School_of_Athens"_by_Raffaello_Sanzio_da_Urbino.jpg', 'The School of Athens', 'Raphael', '1509–1511', 'Fresco · Apostolic Palace, Vatican', 'One-point perspective converges on Plato and Aristotle — Renaissance humanism made visible.'),
+  schoolAthens: { ...A('school-athens', '"The_School_of_Athens"_by_Raffaello_Sanzio_da_Urbino.jpg', 'The School of Athens', 'Raphael', '1509–1511', 'Fresco · Apostolic Palace, Vatican', 'One-point perspective converges on Plato and Aristotle — Renaissance humanism made visible.'), localImagePath: localImg('School of Athens Raphael') },
   venus: A('birth-venus', 'Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg', 'The Birth of Venus', 'Sandro Botticelli', 'c. 1484–1486', 'Tempera on canvas · Uffizi, Florence', 'A pagan goddess revived for Medici humanists through flowing line.'),
   creationAdam: A('creation-adam', 'Michelangelo_-_Creation_of_Adam_(cropped).jpg', 'The Creation of Adam', 'Michelangelo Buonarroti', 'c. 1508–1512', 'Fresco · Sistine Chapel ceiling', 'The charged gap between two fingers is the most famous negative space in art.'),
   nightWatch: A('night-watch', 'The_Night_Watch_-_HD.jpg', 'The Night Watch', 'Rembrandt van Rijn', '1642', 'Oil on canvas · Rijksmuseum, Amsterdam', 'Baroque chiaroscuro turns a civic militia portrait into living drama.'),
@@ -100,7 +114,7 @@ const ART = {
   nataraja: A('nataraja', 'Shiva_as_the_Lord_of_Dance_LACMA_edit.jpg', 'Shiva as Lord of the Dance (Nataraja)', 'Chola artisans', 'c. 950–1000 CE', 'Bronze · LACMA', 'Shiva dances the cosmos into creation and destruction within a ring of fire.'),
   borobudur: A('borobudur', 'Borobudur-Nothwest-view.jpg', 'Borobudur', 'Shailendra dynasty', '9th c. CE', 'Andesite stupa-mandala · Java', 'A walkable mandala: pilgrims ascend from desire to enlightenment.'),
   ajanta: A('ajanta', 'Ajanta_Padmapani.jpg', 'Bodhisattva Padmapani, Cave 1', 'Ajanta painters', 'c. 5th c. CE', 'Mural (tempera) · Ajanta, Maharashtra', 'Graceful tribhanga pose embodies compassion.'),
-  spoliarium: A('spoliarium', 'Juan_Luna_Spoliarium.jpg', 'Spoliarium', 'Juan Luna', '1884', 'Oil on canvas · National Museum of Fine Arts, Manila', 'Gold medal at Madrid (1884); read by ilustrados as an allegory of colonial oppression.'),
+  spoliarium: { ...A('spoliarium', 'Juan_Luna_Spoliarium.jpg', 'Spoliarium', 'Juan Luna', '1884', 'Oil on canvas · National Museum of Fine Arts, Manila', 'Gold medal at Madrid (1884); read by ilustrados as an allegory of colonial oppression.'), localImagePath: localImg('Part4_Slide4_Spoliarium_Juan_Luna') },
   manunggul: A('manunggul', 'Manunggul_Jar.jpg', 'Manunggul Jar', 'Ancient Palawan potters', 'c. 890–710 BCE', 'Earthenware burial jar · Tabon Caves', 'Two souls ride a spirit boat to the afterlife — a National Treasure.'),
   bulul: A('bulul', 'Bulul_in_the_Ifugao_Museum,_Kiangan.jpg', 'Bulul (Rice Granary Guardian)', 'Ifugao carvers', '19th–20th c.', 'Narra wood · Cordillera', 'Seated rice deities guard the harvest and embody ancestral power.'),
   tnalak: L('tnalak', 'T’nalak Textile', "T'boli weavers of Lake Sebu", 'Living tradition', 'Abaca ikat, dream-woven · South Cotabato', 'Patterns are said to come to weavers like Lang Dulay in dreams from Fu Dalu, the abaca spirit.', 'https://ncca.gov.ph/', ['Ikat resist-dye', 'Dream-weaving', 'Abaca']),
@@ -164,25 +178,14 @@ const R = {
 };
 
 /* ---------------------------------------------------------------------
- * 4b. SUBMITTED CONTENT — PART 1 & PART 3 (from src/documents/*.docx)
+ * 4b. SUBMITTED CONTENT — PART 1, 2, 3, 4 & 5
  *     Local images are picked up automatically from /src/images/PART X/
  *     (matched by file name, any extension). Drop a missing file in with
  *     the name shown on its placeholder and it will appear.
  * ------------------------------------------------------------------- */
-const LOCAL_IMAGES = import.meta.glob('../images/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-const stem = (p: string) => (p.split('/').pop() ?? '').replace(/\.[^.]+$/, '').toLowerCase();
-/** First local file whose name matches one of `names`; otherwise the /public path shown on the placeholder. */
-const localImg = (...names: string[]): string => {
-  for (const n of names) {
-    const hit = Object.entries(LOCAL_IMAGES).find(([k]) => stem(k) === n.toLowerCase());
-    if (hit) return hit[1];
-  }
-  return `/images/${names[0]}.jpg`;
-};
-
-interface SubmittedOpts { names: string[]; commons?: string; tags?: string[]; notes?: { label: string; text: string }[] }
+interface SubmittedOpts { names: string[]; commons?: string; pos?: string; tags?: string[]; notes?: { label: string; text: string }[] }
 function S(id: string, title: string, artist: string, yearOrPeriod: string, mediumOrOrigin: string, caption: string, sourceUrl: string, o: SubmittedOpts): Artwork {
-  return { id, title, artist, yearOrPeriod, mediumOrOrigin, imageUrl: o.commons ? wm(o.commons) : '', localImagePath: localImg(...o.names), caption, sourceUrl, calloutTags: o.tags, notes: o.notes };
+  return { id, title, artist, yearOrPeriod, mediumOrOrigin, imageUrl: o.commons ? wm(o.commons) : '', localImagePath: localImg(...o.names), caption, sourceUrl, objectPosition: o.pos, calloutTags: o.tags, notes: o.notes };
 }
 
 const P1 = {
@@ -206,10 +209,10 @@ const C1 = {
 const P2 = {
   // ---- Part 2A (Thomas Gabriel T. Daco) ----
   lascaux: S('lascaux', 'Lascaux Cave Paintings', 'Prehistoric Paleolithic artists', 'c. 40,000–15,000 BCE', 'Natural pigments (ochre, charcoal) on cave wall · Dordogne, France', 'Lascaux Cave Paintings — Prehistoric visual expression using natural pigments.', 'https://smarthistory.org/hall-of-bulls-lascaux/', { names: ['Lascaux Cave Paintings', 'Lascaux_Cave_Paintings'], commons: 'Lascaux_painting.jpg' }),
-  nefertiti: S('nefertiti', 'Bust of Nefertiti', 'Thutmose', 'c. 3100–30 BCE (Amarna c. 1345 BCE)', 'Painted stucco-coated limestone · Neues Museum, Berlin', 'Bust of Nefertiti by Thutmose — Ancient Egyptian royal art & symbolism.', 'https://www.metmuseum.org/toah/hd/amar/hd_amar.htm', { names: ['Bust of Nefertiti', 'Bust_of_Nefertiti'], commons: 'Nofretete_Neues_Museum.jpg' }),
-  doryphoros: S('doryphoros', 'Doryphoros (Spear Bearer)', 'Polykleitos', 'c. 450–440 BCE (Greece c. 900–31 BCE)', 'Roman marble copy after Greek bronze original · Naples Archaeological Museum', 'Doryphoros (Spear Bearer) by Polykleitos — Classical Greek idealized proportion & contrapposto.', 'https://smarthistory.org/polykleitos-doryphoros-spear-bearer/', { names: ['Doryphoros Polykleitos', 'Doryphoros_Polykleitos'], commons: 'Doryphoros_MAN_Napoli_Inv6011-2.jpg' }),
-  augustus: S('augustus', 'Augustus of Prima Porta', 'Unknown Roman Artist', 'c. 20 BCE / 1st century CE', 'White marble · Vatican Museums, Rome', 'Augustus of Prima Porta — Roman imperial portraiture merging realism and civic power.', 'https://www.khanacademy.org/humanities/ancient-art-civilizations/roman/early-empire/a/augustus-of-primaporta', { names: ['Augustus of Prima Porta', 'Augustus_of_Prima_Porta'], commons: 'Statue-Augustus.jpg' }),
-  monaLisa: S('mona-lisa-2a', 'Mona Lisa', 'Leonardo da Vinci', 'c. 1503–1506 (Renaissance, 14th–16th c.)', 'Oil on poplar panel · Musée du Louvre, Paris', 'Mona Lisa by Leonardo da Vinci — Renaissance Humanism, sfumato & naturalism.', 'https://www.louvre.fr/en/explore/the-palace/from-the-mona-lisa-to-the-wedding-feast-at-cana', { names: ['Mona Lisa by Da Vinci', 'Mona_Lisa_Da_Vinci'], commons: 'Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg' }),
+  nefertiti: S('nefertiti', 'Bust of Nefertiti', 'Thutmose', 'c. 3100–30 BCE (Amarna c. 1345 BCE)', 'Painted stucco-coated limestone · Neues Museum, Berlin', 'Bust of Nefertiti by Thutmose — Ancient Egyptian royal art & symbolism.', 'https://www.metmuseum.org/toah/hd/amar/hd_amar.htm', { names: ['Bust of Nefertiti', 'Bust_of_Nefertiti'], commons: 'Nofretete_Neues_Museum.jpg', pos: '50% 6%' }),
+  doryphoros: S('doryphoros', 'Doryphoros (Spear Bearer)', 'Polykleitos', 'c. 450–440 BCE (Greece c. 900–31 BCE)', 'Roman marble copy after Greek bronze original · Naples Archaeological Museum', 'Doryphoros (Spear Bearer) by Polykleitos — Classical Greek idealized proportion & contrapposto.', 'https://smarthistory.org/polykleitos-doryphoros-spear-bearer/', { names: ['Doryphoros Polykleitos', 'Doryphoros_Polykleitos'], commons: 'Doryphoros_MAN_Napoli_Inv6011-2.jpg', pos: '50% 4%' }),
+  augustus: S('augustus', 'Augustus of Prima Porta', 'Unknown Roman Artist', 'c. 20 BCE / 1st century CE', 'White marble · Vatican Museums, Rome', 'Augustus of Prima Porta — Roman imperial portraiture merging realism and civic power.', 'https://www.khanacademy.org/humanities/ancient-art-civilizations/roman/early-empire/a/augustus-of-primaporta', { names: ['Augustus of Prima Porta', 'Augustus_of_Prima_Porta'], commons: 'Statue-Augustus.jpg', pos: '50% 4%' }),
+  monaLisa: S('mona-lisa-2a', 'Mona Lisa', 'Leonardo da Vinci', 'c. 1503–1506 (Renaissance, 14th–16th c.)', 'Oil on poplar panel · Musée du Louvre, Paris', 'Mona Lisa by Leonardo da Vinci — Renaissance Humanism, sfumato & naturalism.', 'https://www.louvre.fr/en/explore/the-palace/from-the-mona-lisa-to-the-wedding-feast-at-cana', { names: ['Mona Lisa by Da Vinci', 'Mona_Lisa_Da_Vinci'], commons: 'Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg', pos: '50% 6%' }),
   callingMatthew: S('calling-matthew-2a', 'The Calling of Saint Matthew', 'Caravaggio', 'c. 1599–1600 (Baroque, 1600–1700)', 'Oil on canvas · San Luigi dei Francesi, Rome', 'The Calling of Saint Matthew by Caravaggio — Baroque chiaroscuro, movement & intense emotion.', 'https://smarthistory.org/caravaggio-calling-of-st-matthew/', { names: ['The Calling of Saint Matthew Caravaggio', 'The_Calling_of_Saint_Matthew_Caravaggio'], commons: 'The_Calling_of_Saint_Matthew-Caravaggo_(1599-1600).jpg' }),
 
   // ---- Part 2B (Milliscent Claire D. Blanqueza) ----
