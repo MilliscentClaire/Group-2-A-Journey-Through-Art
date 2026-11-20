@@ -18,7 +18,7 @@ export const COURSE = {
   group: 'Group 2',
   course: 'GE 6 — Art Appreciation',
   section: 'Section: [Your Section]',
-  instructor: 'Instructor: [Instructor Name]',
+  instructor: 'Instructor: Charlot B. San Buenaventura',
   school: '[University / College Name]',
   term: 'First Semester, A.Y. 2026–2027',
   pdfPath: '/Group2_Art_Appreciation_Portfolio_Black.pdf',
