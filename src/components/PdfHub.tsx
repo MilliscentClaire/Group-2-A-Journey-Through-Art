@@ -192,7 +192,7 @@ function MemberContributionsDocument() {
       <div className="bg-[#16161A] text-[#EDE7DB] p-6 sm:p-8 border-b-2 border-gold flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-[760px]">
           <div className="font-mono text-[10px] tracking-[0.26em] uppercase text-[#C5A059] font-semibold">
-            Final Performance Task · Art Appreciation Portfolio
+            Final Performance Task · {COURSE.school} · {COURSE.course}
           </div>
           <h3 className="font-serif text-[26px] sm:text-[32px] font-semibold leading-tight mt-2 text-[#EDE7DB]">
             GROUP 2: OFFICIAL ROSTER, ASSIGNED ROLES &amp; SPECIFIC CONTRIBUTIONS
@@ -219,7 +219,7 @@ function MemberContributionsDocument() {
           </div>
           <div className="grid grid-cols-[160px_1fr] border-b border-line">
             <div className="bg-card/80 px-3.5 py-2.5 font-semibold text-ink border-r border-line">Course &amp; Instructor</div>
-            <div className="px-3.5 py-2.5 text-ink/90">{COURSE.course} · {COURSE.instructor}</div>
+            <div className="px-3.5 py-2.5 text-ink/90">{COURSE.course} · {COURSE.instructor} · {COURSE.school}</div>
           </div>
           <div className="grid grid-cols-[160px_1fr] border-b border-line md:border-r">
             <div className="bg-card/80 px-3.5 py-2.5 font-semibold text-ink border-r border-line">Project Leader</div>

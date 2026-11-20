@@ -6,23 +6,37 @@ import { PARTS, SLIDES } from '../data/slidesData';
 import { animateCardsIn, animateOverlayIn } from '../utils/animations';
 
 /* ---------- Scaled 16:9 stage (keeps 1122×631 design pixel-perfect) ---------- */
-export function ScaledStage({ children }: { children: React.ReactNode }) {
+export function ScaledStage({ children, zoom = 1 }: { children: React.ReactNode; zoom?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const ro = new ResizeObserver(([e]) => {
-      const { width, height } = e.contentRect;
-      setScale(Math.min(width / 1122, height / 631));
-    });
+    const updateFrom = (width: number, height: number) => {
+      if (width > 0 && height > 0) {
+        setScale(Math.min(width / 1122, height / 631));
+      }
+    };
+    const rect = el.getBoundingClientRect();
+    updateFrom(rect.width, rect.height);
+    const ro = new ResizeObserver(([e]) => updateFrom(e.contentRect.width, e.contentRect.height));
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+  const effectiveScale = scale * zoom;
   return (
-    <div ref={ref} className="relative w-full h-full flex items-center justify-center overflow-hidden">
-      <div style={{ width: 1122 * scale, height: 631 * scale }} className="relative shadow-[0_40px_90px_-30px_rgba(0,0,0,0.75)]">
-        <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: 1122, height: 631 }} className="absolute top-0 left-0 plaque-border">
+    <div
+      ref={ref}
+      className={`relative w-full h-full flex ${zoom > 1 ? 'overflow-auto thin-scroll p-2' : 'overflow-hidden items-center justify-center'}`}
+    >
+      <div
+        style={{ width: 1122 * effectiveScale, height: 631 * effectiveScale }}
+        className={`relative shrink-0 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.75)] ${zoom > 1 ? 'm-auto' : ''}`}
+      >
+        <div
+          style={{ transform: `scale(${effectiveScale})`, transformOrigin: 'top left', width: 1122, height: 631 }}
+          className="absolute top-0 left-0 plaque-border"
+        >
           {children}
         </div>
       </div>

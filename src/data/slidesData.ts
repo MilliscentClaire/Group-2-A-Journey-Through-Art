@@ -19,7 +19,7 @@ export const COURSE = {
   course: 'GE 6 — Art Appreciation',
   section: 'Section: [Your Section]',
   instructor: 'Instructor: Charlot B. San Buenaventura',
-  school: '[University / College Name]',
+  school: 'University of Nueva Caceres',
   term: 'First Semester, A.Y. 2026–2027',
   pdfPath: '/Group2_Art_Appreciation_Portfolio_Black.pdf',
   pdfBlackPath: '/Group2_Art_Appreciation_Portfolio_Black.pdf',

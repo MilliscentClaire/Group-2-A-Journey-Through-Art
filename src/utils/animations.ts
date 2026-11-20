@@ -9,43 +9,39 @@ export function animateSlideIn(root: Root) {
   const targets = q(root, '[data-anim]');
   if (!targets.length) return;
   anime.remove(targets);
+  anime.set(targets, { opacity: 0, translateY: 12 });
   anime({
     targets,
-    translateY: [28, 0],
+    translateY: [12, 0],
     opacity: [0, 1],
-    easing: 'easeOutExpo',
-    duration: 1100,
-    delay: anime.stagger(65, { start: 80 }),
+    easing: 'easeOutCubic',
+    duration: 460,
+    delay: anime.stagger(28, { start: 0 }),
   });
 }
 
-/** 2. Artwork frame reveal — shutter lifts, image scales in, golden border draws itself. */
+/** 2. Artwork frame reveal — image fades/scales in seamlessly and golden border draws itself. */
 export function animateFrameReveal(root: Root) {
   const shutters = q(root, '[data-shutter]');
   const imgs = q(root, '[data-frame-img]');
   const lines = q(root, '[data-frame-line]');
   anime.remove([...shutters, ...imgs, ...lines]);
-  anime({
-    targets: shutters,
-    scaleY: [1, 0],
-    easing: 'easeInOutQuart',
-    duration: 1000,
-    delay: anime.stagger(140, { start: 200 }),
-  });
+  anime.set(shutters, { scaleY: 0 });
+  anime.set(imgs, { opacity: 0, scale: 0.975 });
   anime({
     targets: imgs,
-    scale: [0.94, 1],
-    opacity: [0.4, 1],
-    easing: 'easeOutExpo',
-    duration: 1600,
-    delay: anime.stagger(140, { start: 300 }),
+    scale: [0.975, 1],
+    opacity: [0, 1],
+    easing: 'easeOutCubic',
+    duration: 520,
+    delay: anime.stagger(55, { start: 0 }),
   });
   anime({
     targets: lines,
     strokeDashoffset: [100, 0],
-    easing: 'easeInOutSine',
-    duration: 1500,
-    delay: anime.stagger(140, { start: 450 }),
+    easing: 'easeOutCubic',
+    duration: 650,
+    delay: anime.stagger(55, { start: 40 }),
   });
 }
 
