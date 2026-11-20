@@ -191,21 +191,23 @@ function DesignBreakdown({ s, open }: { s: PortfolioSlide; open: (a: Artwork) =>
 
 function TimelineContext({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => void }) {
   return (
-    <div className="flex flex-col h-full gap-5">
-      <div className="grid grid-cols-[1.25fr_1fr] gap-8">
-        <div className="flex flex-col gap-3">
-          <Title s={s} size={32} />
-          <Paras s={s} size={11.8} />
-        </div>
-        <div className="self-end"><Analysis s={s} compact /></div>
+    <div className="grid grid-rows-[265px_1fr] h-full gap-5">
+      <div className="grid grid-cols-[1.25fr_1fr] gap-8 min-h-0">
+        <FitColumn className="gap-2.5">
+          <Title s={s} size={30} />
+          <Paras s={s} size={11.2} />
+        </FitColumn>
+        <FitColumn className="justify-end">
+          <Analysis s={s} compact />
+        </FitColumn>
       </div>
-      <div className="relative flex-1 min-h-0">
+      <div className="relative min-h-0">
         <div data-anim className="absolute left-0 right-0 top-0 h-px bg-gold/50" />
-        <div className="grid h-full gap-5 pt-4" style={{ gridTemplateColumns: `repeat(${s.artworks.length}, minmax(0,1fr))` }}>
+        <div className="grid h-full gap-4 pt-4" style={{ gridTemplateColumns: `repeat(${s.artworks.length}, minmax(0,1fr))` }}>
           {s.artworks.map((a) => (
             <div key={a.id} className="relative flex flex-col min-h-0">
               <span className="absolute -top-[19.5px] left-0 w-2 h-2 rounded-full bg-gold ring-4 ring-wall" />
-              <span data-anim className="font-mono text-[9px] text-gold mb-1.5 tracking-wider">{a.yearOrPeriod}</span>
+              <span data-anim className="font-mono text-[9px] text-gold mb-1.5 tracking-wider truncate">{a.yearOrPeriod}</span>
               <ArtFrame art={a} onOpen={open} fit="cover" className="flex-1" variant={isHeritage(s) ? 'terra' : 'gold'} />
             </div>
           ))}
@@ -217,17 +219,18 @@ function TimelineContext({ s, open }: { s: PortfolioSlide; open: (a: Artwork) =>
 
 function HeritageSpotlight({ s, open }: { s: PortfolioSlide; open: (a: Artwork) => void }) {
   const arts = s.artworks;
+  const terra = isHeritage(s);
   return (
     <div className="grid grid-cols-[1fr_1.08fr] gap-9 h-full">
       <FitColumn className="gap-3.5">
-        <div data-anim className="okir-band h-1.5 w-28" />
+        {terra && <div data-anim className="okir-band h-1.5 w-28" />}
         <Title s={s} size={32} />
         <Paras s={s} size={11.8} />
         <div className="mt-auto"><Analysis s={s} /></div>
       </FitColumn>
       <div className={`grid gap-4 min-h-0 ${arts.length >= 3 ? 'grid-cols-2 grid-rows-2' : arts.length === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
         {arts.map((a, i) => (
-          <ArtFrame key={a.id} art={a} onOpen={open} variant="terra" fit="cover" className={arts.length >= 3 && i === 0 ? 'row-span-2' : ''} />
+          <ArtFrame key={a.id} art={a} onOpen={open} variant={terra ? 'terra' : 'gold'} fit="cover" className={arts.length === 3 && i === 0 ? 'row-span-2' : ''} />
         ))}
       </div>
     </div>
